@@ -23,7 +23,7 @@ function ProductCard({
   };
 
   return (
-    <div className="border rounded-lg shadow-xl overflow-hidden transition-shadow duration-300">
+    <div className="border rounded-lg shadow-xl overflow-hidden transition-shadow duration-300 flex flex-col h-full">
       <div
         onClick={() => {
           handleProductView({
@@ -45,7 +45,7 @@ function ProductCard({
           alt={productName}
         ></img>
       </div>
-      <div className="p-4">
+      <div className="p-4 flex flex-col flex-grow">
         <h2
           onClick={() => {
             handleProductView({
@@ -66,7 +66,7 @@ function ProductCard({
         <div className="min-h-20 max-h-20">
           <p className="text-gray-600 text-sm line-clamp-4">{description}</p>
         </div>
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between mt-auto">
           {specialPrice ? (
             <div className="flex flex-col">
               <span className="text-gray-400 line-through">
