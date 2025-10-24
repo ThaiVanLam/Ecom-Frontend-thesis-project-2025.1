@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchCategories, fetchProducts } from "../store/action";
 import Filter from "./Filter";
 import useProductFilter from "./useProductFilter";
+import Loader from "./Loader";
 
 function Products() {
   const { isLoading, errorMessage } = useSelector((state) => state.errors);
@@ -22,7 +23,7 @@ function Products() {
     <div className="lg:px-14 sm:px-8 px-4 py-14 2xl:w-[90%] 2xl:mx-auto">
       <Filter categories={categories ? categories : []} />
       {isLoading ? (
-        <p>It is loading...</p>
+        <Loader text={"Products Loading"} />
       ) : errorMessage ? (
         <div className="flex justify-center items-center h-[200px]">
           <FaExclamationTriangle className="text-slate-800 text-3xl mr-2" />
