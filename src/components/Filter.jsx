@@ -10,14 +10,15 @@ import { useEffect, useState } from "react";
 import { FiArrowDown, FiArrowUp, FiRefreshCw, FiSearch } from "react-icons/fi";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 
-const Filter = () => {
-  const categories = [
-    { categoryId: 1, categoryName: "Electronics" },
-    { categoryId: 1, categoryName: "Clothing" },
-    { categoryId: 1, categoryName: "Furniture" },
-    { categoryId: 1, categoryName: "Books" },
-    { categoryId: 1, categoryName: "Toys" },
-  ];
+const Filter = ({ categories }) => {
+  // const categories = [
+  //   { categoryId: 1, categoryName: "Gaming Laptops" },
+  //   { categoryId: 1, categoryName: "Business Laptops" },
+  //   { categoryId: 1, categoryName: "Student Laptops" },
+  //   { categoryId: 1, categoryName: "Ultrabook" },
+  //   { categoryId: 1, categoryName: "Workstation" },
+  //   { categoryId: 1, categoryName: "Graphics Laptops" },
+  // ];
 
   const [searchParams] = useSearchParams();
   const params = new URLSearchParams(searchParams);

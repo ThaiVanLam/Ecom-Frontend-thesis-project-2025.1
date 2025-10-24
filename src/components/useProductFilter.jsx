@@ -34,7 +34,7 @@ function useProductFilter() {
     console.log("Query string: ", queryString);
 
     dispatch(fetchProducts(queryString));
-  }, [dispatch, searchParams]);
+  }, [dispatch, searchParams.toString()]);
 }
 
 export default useProductFilter;
