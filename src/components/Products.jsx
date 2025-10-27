@@ -36,7 +36,7 @@ function Products() {
         </div>
       ) : (
         <div className="min-h-[700px]">
-          <div className="pb-6 pt-14 grid 2xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 gap-y-6 gap-x-6">
+          <div className="pb-6 pt-14 grid 2xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 gap-y-6 gap-x-6 min-h-[400px]">
             {products &&
               products.map((item, i) => <ProductCard key={i} {...item} />)}
           </div>
