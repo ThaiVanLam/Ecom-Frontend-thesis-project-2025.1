@@ -56,7 +56,7 @@ export default function ProductViewModal({
               <div className="px-6 pt-10 pb-2">
                 <DialogTitle
                   as="h1"
-                  className="lg:text-3xl sm:text-2xl text-xl font-semibold leading-6 text-gray-800 mb-4"
+                  className="lg:text-3xl sm:text-2xl text-xl font-semibold 8 text-gray-800 mb-4 "
                 >
                   {productName}
                 </DialogTitle>

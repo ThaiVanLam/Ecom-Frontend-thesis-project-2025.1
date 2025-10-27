@@ -1,12 +1,13 @@
 import React, { useEffect } from "react";
-import ProductCard from "./ProductCard";
+import ProductCard from "../shared/ProductCard";
 import { FaExclamationTriangle } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchCategories, fetchProducts } from "../store/action";
+import { fetchCategories, fetchProducts } from "../../store/action";
 import Filter from "./Filter";
-import useProductFilter from "./useProductFilter";
-import Loader from "./Loader";
-import Paginations from "./Paginations";
+
+import Loader from "../shared/Loader";
+import Paginations from "../shared/Paginations";
+import useProductFilter from "../../hooks/useProductFilter";
 
 function Products() {
   const { isLoading, errorMessage } = useSelector((state) => state.errors);
