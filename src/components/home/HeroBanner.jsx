@@ -5,6 +5,10 @@ import { bannerLists } from "../../utils";
 
 // Import Swiper styles
 import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "swiper/css/scrollbar";
+import "swiper/css/autoplay";
 import { Link } from "react-router-dom";
 
 const colors = ["bg-banner-color1", "bg-banner-color2", "bg-banner-color3"];
@@ -39,10 +43,10 @@ const HeroBanner = () => {
                       {item.description}
                     </p>
                     <Link
-                      className="mt-6 inline-block bg-black text-white py-2 px-4 rounded-sm hover:bg-gray-800"
+                      className="mt-6 inline-block bg-black text-white py-2 px-4 rounded hover:bg-gray-800"
                       to="/products"
                     >
-                      Shop
+                      shop
                     </Link>
                   </div>
                 </div>
