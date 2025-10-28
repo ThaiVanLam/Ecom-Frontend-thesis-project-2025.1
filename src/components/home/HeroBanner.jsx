@@ -9,6 +9,7 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import "swiper/css/autoplay";
+import "swiper/css/effect-fade";
 import { Link } from "react-router-dom";
 
 const colors = ["bg-banner-color1", "bg-banner-color2", "bg-banner-color3"];
@@ -30,8 +31,9 @@ const HeroBanner = () => {
             <div
               className={`carousel-item rounded-md sm:h-[500px] h-96 ${colors[i]}`}
             >
-              <div className="flex items-center justify-center">
-                <div className="hidden lg:flex justify-center w-1/2 p-8">
+              <div className="flex items-center justify-center h-full">
+                {/* Text Section */}
+                <div className="w-full lg:w-1/2 flex justify-center items-center p-8">
                   <div className="text-center">
                     <h3 className="text-3xl text-white font-bold">
                       {item.title}
@@ -50,8 +52,14 @@ const HeroBanner = () => {
                     </Link>
                   </div>
                 </div>
-                <div className="w-full flex justify-center lg:w-1/2 p-4">
-                  <img src={item?.image}></img>
+
+                {/* Image Section */}
+                <div className="hidden lg:flex w-1/2 justify-center items-center p-4">
+                  <img
+                    src={item?.image}
+                    alt={item?.title}
+                    className="max-h-[450px] object-contain"
+                  />
                 </div>
               </div>
             </div>
