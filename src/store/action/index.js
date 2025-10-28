@@ -5,6 +5,8 @@ export const fetchProducts = (queryString) => async (dispatch) => {
     dispatch({ type: "IS_FETCHING" });
     const { data } = await api.get(`/public/products?${queryString}`);
 
+    console.log(data);
+
     dispatch({
       type: "FETCH_PRODUCTS",
       payload: data.content,
