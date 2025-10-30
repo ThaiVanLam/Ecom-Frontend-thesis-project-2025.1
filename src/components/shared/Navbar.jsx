@@ -27,7 +27,7 @@ function Navbar() {
       <div className="lg:px-14 sm:px-8 px-4 w-full flex justify-between">
         <Link to="/" className="flex items-center text-2xl font-bold">
           <IoMdLaptop className="mr-2 text-3xl" />
-          <span className="font-[Poppins]">L-Shop</span>
+          <span className="font-[Poppins]">TechZone Laptop</span>
         </Link>
 
         <ul
