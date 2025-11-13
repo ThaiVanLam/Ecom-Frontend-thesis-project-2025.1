@@ -3,8 +3,23 @@ import { HiMiniShoppingCart } from "react-icons/hi2";
 import { Link } from "react-router-dom";
 import { MdShoppingCartCheckout } from "react-icons/md";
 import { MdArrowBack } from "react-icons/md";
+import { useDispatch, useSelector } from "react-redux";
+import ItemContent from "./ItemContent";
 
 function Cart() {
+  const dispatch = useDispatch();
+  const { cart } = useSelector((state) => state.carts);
+  const newCart = { ...cart };
+
+  newCart.totalPrice = cart?.reduce(
+    (acc, cur) => acc * Number(cur?.specialPrice) * Number(cur?.quantity),
+    0
+  );
+
+  if (!cart || cart.length === 0) {
+    return <h1>Cart is Empty</h1>;
+  }
+
   return (
     <div className="lg:px-14 sm:px-8 px-4 py-10">
       <div className="flex flex-col items-center mb-12">
@@ -25,6 +40,13 @@ function Cart() {
         </div>
         <div className="justify-self-center text-lg text-slate-800">Total</div>
       </div>
+
+      <div>
+        {cart &&
+          cart.length > 0 &&
+          cart.map((item, i) => <ItemContent key={i} {...item} />)}
+      </div>
+
       <div className="border-t-[1.5px] border-slate-200 py-4 flex sm:flex-row sm:px-0 px-2 flex-col sm:justify-between gap-4">
         <div></div>
         <div className="flex text-sm gap-1 flex-col">
