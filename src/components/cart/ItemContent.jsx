@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { FaTrash } from "react-icons/fa";
 import SetQuantity from "./SetQuantity";
+import { useDispatch } from "react-redux";
+import { increaseCartQuantity } from "../../store/action";
+import toast from "react-hot-toast";
 
 function ItemContent({
   productId,
@@ -14,6 +17,18 @@ function ItemContent({
   cartId,
 }) {
   const [currentQuantity, setCurrentQuantity] = useState(quantity);
+  const dispatch = useDispatch();
+
+  const handleQtyIncrease = (cartItems) => {
+    dispatch(
+      increaseCartQuantity(
+        cartItems,
+        toast,
+        currentQuantity,
+        setCurrentQuantity
+      )
+    );
+  };
   return (
     <div className="grid md:grid-cols-5 grid-cols-4 md:text-md text-sm gap-4 items-center  border-[1px] border-slate-200  rounded-md  lg:px-4  py-4 p-2">
       <div className="md:col-span-2 justify-self-start flex  flex-col gap-2 ">
@@ -49,7 +64,17 @@ function ItemContent({
         <SetQuantity
           quantity={currentQuantity}
           cardCounter={true}
-          handleQtyIncrease={() => {}}
+          handleQtyIncrease={() => {
+            handleQtyIncrease({
+              image,
+              productName,
+              description,
+              specialPrice,
+              price,
+              productId,
+              quantity,
+            });
+          }}
           handleQtyDecrease={() => {}}
         />
       </div>
