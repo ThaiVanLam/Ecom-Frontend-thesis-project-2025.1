@@ -29,6 +29,14 @@ function ItemContent({
       )
     );
   };
+
+  const handleQtyDecrease = (cartItems) => {
+    if (currentQuantity > 1) {
+      const newQuantity = currentQuantity - 1;
+      setCurrentQuantity(newQuantity);
+      dispatch(decreaseCartQuantity(cartItems, newQuantity));
+    }
+  };
   return (
     <div className="grid md:grid-cols-5 grid-cols-4 md:text-md text-sm gap-4 items-center  border-[1px] border-slate-200  rounded-md  lg:px-4  py-4 p-2">
       <div className="md:col-span-2 justify-self-start flex  flex-col gap-2 ">
@@ -75,7 +83,17 @@ function ItemContent({
               quantity,
             });
           }}
-          handleQtyDecrease={() => {}}
+          handleQtyDecrease={() => {
+            handleQtyDecrease({
+              image,
+              productName,
+              description,
+              specialPrice,
+              price,
+              productId,
+              quantity,
+            });
+          }}
         />
       </div>
 
