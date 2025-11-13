@@ -15,7 +15,7 @@ function SetQuantity({
         <button
           disabled={quantity <= 1}
           className={btnStyles}
-          onClick={handleQtyDecrease()}
+          onClick={handleQtyDecrease}
         >
           -
         </button>

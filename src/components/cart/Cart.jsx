@@ -1,15 +1,24 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { HiMiniShoppingCart } from "react-icons/hi2";
 import { Link } from "react-router-dom";
 import { MdShoppingCartCheckout } from "react-icons/md";
 import { MdArrowBack } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import ItemContent from "./ItemContent";
+import { fetchProducts } from "../../store/action";
 
 function Cart() {
   const dispatch = useDispatch();
   const { cart } = useSelector((state) => state.carts);
+  const { products } = useSelector((state) => state.products);
   const newCart = { ...cart };
+
+  // Fetch products nếu chưa có
+  useEffect(() => {
+    if (!products || products.length === 0) {
+      dispatch(fetchProducts(""));
+    }
+  }, [dispatch, products]);
 
   newCart.totalPrice = cart?.reduce(
     (acc, cur) => acc * Number(cur?.specialPrice) * Number(cur?.quantity),
