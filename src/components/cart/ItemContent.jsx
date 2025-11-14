@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { FaTrash } from "react-icons/fa";
 import SetQuantity from "./SetQuantity";
 import { useDispatch } from "react-redux";
-import { increaseCartQuantity } from "../../store/action";
+import { decreaseCartQuantity, increaseCartQuantity } from "../../store/action";
 import toast from "react-hot-toast";
 
 function ItemContent({
