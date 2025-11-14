@@ -8,10 +8,12 @@ import { LiaSignInAltSolid } from "react-icons/lia";
 import { RxCross2 } from "react-icons/rx";
 import { IoIosMenu } from "react-icons/io";
 import { TiThMenu } from "react-icons/ti";
+import { useSelector } from "react-redux";
 
 function Navbar() {
   const path = useLocation().pathname;
   const [navbarOpen, setNavbarOpen] = useState(false);
+  const { cart } = useSelector((state) => state.carts);
 
   const StyledBadge = styled(Badge)(({ theme }) => ({
     "& .MuiBadge-badge": {
@@ -92,7 +94,7 @@ function Navbar() {
             >
               <StyledBadge
                 showZero
-                badgeContent={0}
+                badgeContent={cart?.length || 0}
                 color="secondary"
                 overlap="rectangular"
                 anchorOrigin={{ vertical: "top", horizontal: "right" }}
