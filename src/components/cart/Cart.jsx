@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import ItemContent from "./ItemContent";
 import { fetchProducts } from "../../store/action";
 import CartEmpty from "./CartEmpty";
+import { formatPrice } from "../../utils/formatPrice";
 
 function Cart() {
   const dispatch = useDispatch();
@@ -22,7 +23,7 @@ function Cart() {
   }, [dispatch, products]);
 
   newCart.totalPrice = cart?.reduce(
-    (acc, cur) => acc * Number(cur?.specialPrice) * Number(cur?.quantity),
+    (acc, cur) => acc + Number(cur?.specialPrice) * Number(cur?.quantity),
     0
   );
 
@@ -62,7 +63,7 @@ function Cart() {
         <div className="flex text-sm gap-1 flex-col">
           <div className="flex justify-between w-full md:text-lg text-sm font-semibold">
             <span>Subtotal</span>
-            <span>$400</span>
+            <span>{formatPrice(newCart?.totalPrice)}</span>
           </div>
 
           <p className="">Taxes and shipping calculated at checkout</p>
