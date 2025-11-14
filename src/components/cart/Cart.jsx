@@ -6,6 +6,7 @@ import { MdArrowBack } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import ItemContent from "./ItemContent";
 import { fetchProducts } from "../../store/action";
+import CartEmpty from "./CartEmpty";
 
 function Cart() {
   const dispatch = useDispatch();
@@ -26,7 +27,7 @@ function Cart() {
   );
 
   if (!cart || cart.length === 0) {
-    return <h1>Cart is Empty</h1>;
+    return <CartEmpty />;
   }
 
   return (
