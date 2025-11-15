@@ -9,11 +9,13 @@ import { RxCross2 } from "react-icons/rx";
 import { IoIosMenu } from "react-icons/io";
 import { TiThMenu } from "react-icons/ti";
 import { useSelector } from "react-redux";
+import { FaSignInAlt } from "react-icons/fa";
 
 function Navbar() {
   const path = useLocation().pathname;
   const [navbarOpen, setNavbarOpen] = useState(false);
   const { cart } = useSelector((state) => state.carts);
+  const { user } = useSelector((state) => state.auth);
 
   const StyledBadge = styled(Badge)(({ theme }) => ({
     "& .MuiBadge-badge": {
@@ -103,16 +105,21 @@ function Navbar() {
               </StyledBadge>
             </Link>
           </li>
-
-          <li className="font-[500] transition-all duration-150">
-            <Link
-              className="flex items-center space-x-2 px-4 py-[6px] bg-gradient-to-r from-indigo-500 to-emerald-500 text-white font-semibold rounded-md shadow-lg hover:from-indigo-400 hover:to-emerald-400 transition duration-300 ease-in-out transform"
-              to="/login"
-            >
-              <LiaSignInAltSolid size={25} />
-              <span>Login</span>
-            </Link>
-          </li>
+          {user && user.id ? (
+            <li className="font-[500] transition-all duration-150">
+              <p>Welcome</p>
+            </li>
+          ) : (
+            <li className="font-[500] transition-all duration-150">
+              <Link
+                className="flex items-center space-x-2 px-4 py-[6px] bg-gradient-to-r from-indigo-500 to-emerald-500 text-white font-semibold rounded-md shadow-lg hover:from-indigo-400 hover:to-emerald-400 transition duration-300 ease-in-out transform"
+                to="/login"
+              >
+                <FaSignInAlt size={25} />
+                <span>Login</span>
+              </Link>
+            </li>
+          )}
         </ul>
         <button
           onClick={() => setNavbarOpen(!navbarOpen)}
