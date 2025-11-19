@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 import { FaShoppingCart } from "react-icons/fa";
 import { HiMiniShoppingCart } from "react-icons/hi2";
 import { IoExitOutline } from "react-icons/io5";
+import BackDrop from "./BackDrop";
 
 function UserMenu() {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -58,12 +59,14 @@ function UserMenu() {
         </Link>
 
         <MenuItem onClick={logoutHandler} className="flex gap-2">
-          <div className="font-semibold w-full flex gap-2 items-center bg-button-gradient px-4 py-1 text-white rounded-sm">
+          <div className="font-semibold w-full flex gap-2 items-center bg-button-gradient px-4 py-1 text-white rounded-sm ">
             <IoExitOutline className="text-xl" />
             <span className="font-bold text-[16px] mt-1">Logout</span>
           </div>
         </MenuItem>
       </Menu>
+
+      {open && <BackDrop />}
     </div>
   );
 }
