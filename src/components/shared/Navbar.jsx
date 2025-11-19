@@ -10,6 +10,7 @@ import { IoIosMenu } from "react-icons/io";
 import { TiThMenu } from "react-icons/ti";
 import { useSelector } from "react-redux";
 import { FaSignInAlt } from "react-icons/fa";
+import UserMenu from "../../components/UserMenu";
 
 function Navbar() {
   const path = useLocation().pathname;
@@ -107,7 +108,7 @@ function Navbar() {
           </li>
           {user && user.id ? (
             <li className="font-[500] transition-all duration-150">
-              <p>Welcome</p>
+              <UserMenu />
             </li>
           ) : (
             <li className="font-[500] transition-all duration-150">
