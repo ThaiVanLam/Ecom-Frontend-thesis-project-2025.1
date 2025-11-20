@@ -6,6 +6,7 @@ import { FaUserPlus } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { registerNewUser } from "../../store/action";
+import Spinners from "../../components/shared/Spinners";
 
 function Register() {
   const navigate = useNavigate();
@@ -74,7 +75,14 @@ function Register() {
           className="bg-gradient-to-r from-indigo-500 to-emerald-500 flex gap-2 items-center justify-center font-semibold text-white w-full py-2 hover:from-indigo-400 hover:to-emerald-400 transition-colors duration-100 ease-in-out transform rounded-sm my-3 cursor-pointer rounded-md"
           type="submit"
         >
-          {loader ? <>Loading...</> : <>Register</>}
+          {loader ? (
+            <>
+              <Spinners />
+              Loading...
+            </>
+          ) : (
+            <>Register</>
+          )}
         </button>
 
         <p className="text-center text-sm text-slate-700 mt-6">

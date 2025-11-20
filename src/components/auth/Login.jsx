@@ -6,6 +6,7 @@ import InputField from "../shared/InputField";
 import { useDispatch } from "react-redux";
 import { authenticateSigninUser } from "../../store/action";
 import toast from "react-hot-toast";
+import Spinners from "../../components/shared/Spinners";
 
 function Login() {
   const navigate = useNavigate();
@@ -63,7 +64,14 @@ function Login() {
           className="bg-gradient-to-r from-indigo-500 to-emerald-500 flex gap-2 items-center justify-center font-semibold text-white w-full py-2 hover:from-indigo-400 hover:to-emerald-400 transition-colors duration-100 ease-in-out transform rounded-sm my-3 cursor-pointer rounded-md"
           type="submit"
         >
-          {loader ? <>Loading...</> : <>Login</>}
+          {loader ? (
+            <>
+              <Spinners />
+              Loading...
+            </>
+          ) : (
+            <>Login</>
+          )}
         </button>
 
         <p className="text-center text-sm text-slate-700 mt-6">
