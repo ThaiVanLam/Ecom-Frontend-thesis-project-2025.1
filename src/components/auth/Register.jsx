@@ -1,11 +1,15 @@
 import InputField from "../../components/shared/InputField";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { FaUserPlus } from "react-icons/fa";
+import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import { registerNewUser } from "../../store/action";
 
 function Register() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [loader, setLoader] = useState(false);
 
   const {
@@ -17,6 +21,7 @@ function Register() {
 
   const registerHandler = async (data) => {
     console.log("register click");
+    dispatch(registerNewUser(data, toast, reset, navigate, setLoader));
   };
   return (
     <div className="min-h-[calc(100vh-64px)] flex justify-center items-center">
