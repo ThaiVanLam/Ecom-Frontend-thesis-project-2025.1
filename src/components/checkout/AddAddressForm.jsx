@@ -35,7 +35,7 @@ function AddAddressForm({ address, setOpenAddressModal }) {
           <InputField
             label="Building Name"
             required
-            id="building"
+            id="buildingName"
             type="text"
             register={register}
             message="*Building Name is required"
