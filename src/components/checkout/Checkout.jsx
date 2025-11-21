@@ -7,7 +7,7 @@ function Checkout() {
   const steps = ["Address", "Payment Method", "Order Summary", "Payment"];
   return (
     <div className="py-14 min-h-[calc(100vh-100px)]">
-      <Stepper activeStep={activeStep}>
+      <Stepper activeStep={activeStep} alternativeLabel>
         {steps.map((label, index) => (
           <Step key={index}>
             <StepLabel>{label}</StepLabel>

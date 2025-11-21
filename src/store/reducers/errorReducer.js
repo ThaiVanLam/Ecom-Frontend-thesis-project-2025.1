@@ -3,6 +3,7 @@ const initialState = {
   errorMessage: null,
   categoryLoader: false,
   categoryError: false,
+  btnLoader: false,
 };
 
 export const errorReducer = (state = initialState, action) => {
@@ -43,5 +44,4 @@ export const errorReducer = (state = initialState, action) => {
     default:
       return state;
   }
-  return state;
 };
