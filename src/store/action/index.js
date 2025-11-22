@@ -175,3 +175,22 @@ export const addUpdateUserAddress =
       setOpenAddressModal(false);
     }
   };
+
+export const getUserAddresses = () => async (dispatch, getState) => {
+  try {
+    dispatch({ type: "IS_FETCHING" });
+    const { data } = await api.get(`/user-manager/api/users/addresses`);
+
+    dispatch({
+      type: "USER_ADDRESS",
+      payload: data,
+    });
+    dispatch({ type: "IS_SUCCESS" });
+  } catch (error) {
+    dispatch({
+      type: "IS_ERROR",
+      payload:
+        error?.response?.data?.message || "Failed to fetch user's addresses",
+    });
+  }
+};
