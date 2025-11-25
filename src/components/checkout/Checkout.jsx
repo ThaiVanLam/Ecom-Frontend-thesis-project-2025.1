@@ -4,6 +4,7 @@ import AddressInfo from "../checkout/AddressInfo";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserAddresses } from "../../store/action";
 import toast from "react-hot-toast";
+import Skeleton from "../../components/shared/Skeleton";
 
 function Checkout() {
   const [activeStep, setActiveStep] = useState(0);
@@ -45,9 +46,16 @@ function Checkout() {
           </Step>
         ))}
       </Stepper>
-      <div className="mt-5">
-        {activeStep === 0 && <AddressInfo address={address} />}
-      </div>
+
+      {isLoading ? (
+        <div className="lg:w-[80%] mx-auto py-5">
+          <Skeleton />
+        </div>
+      ) : (
+        <div className="mt-5">
+          {activeStep === 0 && <AddressInfo address={address} />}
+        </div>
+      )}
 
       <div
         className="flex justify-between items-center px-4 fixed z-50 h-24 bottom-0 bg-white left-0 w-full py-4 border-slate-200"
