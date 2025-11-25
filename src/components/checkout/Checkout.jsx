@@ -6,6 +6,7 @@ import { getUserAddresses } from "../../store/action";
 import toast from "react-hot-toast";
 import Skeleton from "../../components/shared/Skeleton";
 import ErrorPage from "../../components/shared/ErrorPage";
+import PaymentMethod from "./PaymentMethod";
 
 function Checkout() {
   const [activeStep, setActiveStep] = useState(0);
@@ -55,6 +56,7 @@ function Checkout() {
       ) : (
         <div className="mt-5">
           {activeStep === 0 && <AddressInfo address={address} />}
+          {activeStep === 1 && <PaymentMethod />}
         </div>
       )}
 
@@ -80,7 +82,7 @@ function Checkout() {
                 ? !paymentMethod
                 : false)
             }
-            className={`bg-custom-blue font-semibold px-6 h-10 rounded-md text-white ${
+            className={`bg-custom-blue font-semibold px-6 h-10 rounded-md text-white cursor-pointer ${
               errorMessage ||
               (activeStep === 0 && !selectedUserCheckoutAddress) ||
               (activeStep === 1 && !paymentMethod)
