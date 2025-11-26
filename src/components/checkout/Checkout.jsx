@@ -14,6 +14,8 @@ import Skeleton from "../../components/shared/Skeleton";
 import ErrorPage from "../../components/shared/ErrorPage";
 import PaymentMethod from "./PaymentMethod";
 import OrderSummary from "./OrderSummary";
+import StripePayment from "./StripePayment";
+import PaypalPayment from "./PaypalPayment";
 
 function Checkout() {
   const [activeStep, setActiveStep] = useState(0);
@@ -72,6 +74,15 @@ function Checkout() {
               address={selectedUserCheckoutAddress}
               paymentMethod={paymentMethod}
             />
+          )}
+          {activeStep === 3 && (
+            <>
+              {paymentMethod === "Stripe" ? (
+                <StripePayment />
+              ) : (
+                <PaypalPayment />
+              )}
+            </>
           )}
         </div>
       )}
