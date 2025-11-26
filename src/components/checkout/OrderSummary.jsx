@@ -46,9 +46,7 @@ function OrderSummary({ totalPrice, cart, address, paymentMethod }) {
                 {cart?.map((item) => (
                   <div key={item?.productId} className="flex items-center">
                     <img
-                      src={`${
-                        import.meta.env.VITE_BACK_END_URL
-                      }/product-manager/images/${item?.image}`}
+                      src={item?.image}
                       alt="Product"
                       className="w-12 h-12 rounded-sm"
                     ></img>
@@ -56,14 +54,31 @@ function OrderSummary({ totalPrice, cart, address, paymentMethod }) {
                       <p>{item?.productName}</p>
                       <p>
                         {item?.quantity} x ${item?.specialPrice} = $
-                        {/* {formatPriceCalculation(
-                          item?.quantity,
-                          item?.specialPrice
-                        )} */}
+                        {item.quantity * item.specialPrice}
                       </p>
                     </div>
                   </div>
                 ))}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="w-full lg:w-4/12 mt-4 lg:mt-0">
+          <div className="border rounded-lg shadow-xs p-4 space-y-4">
+            <h2 className="text-2xl font-semibold mb-2">Order Summary</h2>
+
+            <div className="space-y-2">
+              <div className="flex justify-between">
+                <span>Products</span>
+                <span>${totalPrice}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Tax (0%)</span>
+                <span>$0.00</span>
+              </div>
+              <div className="flex justify-between font-semibold">
+                <span>SubTotal</span>
+                <span>${totalPrice}</span>
               </div>
             </div>
           </div>
