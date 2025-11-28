@@ -20,7 +20,18 @@ function StripePayment() {
 
   useEffect(() => {
     if (!clientSecret) {
-      dispatch(createStripePaymentSecret(totalPrice));
+      const sendData = {
+        amount: Number(totalPrice) * 100,
+        currency: "usd",
+        email: user.email,
+        name: `${user.username}`,
+        address: selectedUserCheckoutAddress,
+        description: `Order for ${user.email}`,
+        metadata: {
+          test: "1",
+        },
+      };
+      dispatch(createStripePaymentSecret(sendData));
     }
   }, [clientSecret]);
 
