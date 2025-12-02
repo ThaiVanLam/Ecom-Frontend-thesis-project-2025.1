@@ -327,13 +327,20 @@ export const stripePaymentConfirmation =
 export const analyticsAction = () => async (dispatch, getState) => {
   try {
     dispatch({ type: "IS_FETCHING" });
-    const { data1 } = await api.get("/order-manager/api/admin/app/analytics");
-    const { data2 } = await api.get("/product-manager/api/admin/app/analytics");
-    const data = {
-      ...data1,
-      ...data2,
+
+    // Gọi cả 2 API đồng thời
+    const [orderAnalytics, productAnalytics] = await Promise.all([
+      api.get("/order-manager/api/admin/app/analytics"),
+      api.get("/product-manager/api/admin/app/analytics"),
+    ]);
+
+    // Kết hợp data từ cả 2 response
+    const combinedData = {
+      ...productAnalytics.data,
+      ...orderAnalytics.data,
     };
-    dispatch({ type: "FETCH_ANALYTICS", payload: data });
+
+    dispatch({ type: "FETCH_ANALYTICS", payload: combinedData });
     dispatch({ type: "IS_SUCCESS" });
   } catch (error) {
     dispatch({
