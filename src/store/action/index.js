@@ -323,3 +323,23 @@ export const stripePaymentConfirmation =
       setErrorMessage("Payment Failed. Please try again.");
     }
   };
+
+export const analyticsAction = () => async (dispatch, getState) => {
+  try {
+    dispatch({ type: "IS_FETCHING" });
+    const { data1 } = await api.get("/order-manager/api/admin/app/analytics");
+    const { data2 } = await api.get("/product-manager/api/admin/app/analytics");
+    const data = {
+      ...data1,
+      ...data2,
+    };
+    dispatch({ type: "FETCH_ANALYTICS", payload: data });
+    dispatch({ type: "IS_SUCCESS" });
+  } catch (error) {
+    dispatch({
+      type: "IS_ERROR",
+      payload:
+        error?.response?.data?.message || "Failed to fetch analytics data",
+    });
+  }
+};
