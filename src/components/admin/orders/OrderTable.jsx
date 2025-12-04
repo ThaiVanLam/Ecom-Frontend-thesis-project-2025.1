@@ -8,10 +8,12 @@ import {
   useSearchParams,
 } from "react-router-dom";
 import Modal from "../../../components/shared/Modal";
+import UpdateOrderForm from "./UpdateOrderForm";
 
 function OrderTable({ adminOrder, pagination }) {
   const [updateOpenModal, setUpdateOpenModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState("");
+  const [loader, setLoader] = useState(false);
   const navigate = useNavigate();
 
   const [currentPage, setCurrentPage] = useState(
@@ -81,7 +83,16 @@ function OrderTable({ adminOrder, pagination }) {
         open={updateOpenModal}
         setOpen={setUpdateOpenModal}
         title="Update Order Status"
-      ></Modal>
+      >
+        <UpdateOrderForm
+          setOpen={setUpdateOpenModal}
+          open={updateOpenModal}
+          loader={loader}
+          setLoader={setLoader}
+          selectedId={selectedItem.id}
+          selectedItem={selectedItem}
+        />
+      </Modal>
     </div>
   );
 }
