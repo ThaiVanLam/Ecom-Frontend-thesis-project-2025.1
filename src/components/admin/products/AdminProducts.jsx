@@ -6,60 +6,65 @@ import { MdAddShoppingCart } from "react-icons/md";
 import { useSelector } from "react-redux";
 import { DataGrid } from "@mui/x-data-grid";
 import { adminProductTableColumn } from "../../../components/helper/tableColumn";
+import { useDashboardProductFilter } from "../../../hooks/useProductFilter";
 
 function AdminProducts() {
-  const products = [
-    {
-      productId: 10,
-      productName: "HP ZBook Fury 16 G10",
-      image:
-        "http://localhost:8080/product-manager/images/ebb64a8c-71c8-497b-9dfd-c7018d9dc311.svg",
-      description:
-        "The HP ZBook Fury 16 G10 is a professional workstation designed for engineers and 3D creators, featuring advanced graphics, robust cooling, and unmatched reliability.",
-      quantity: 4,
-      price: 6800.0,
-      discount: 10.0,
-      specialPrice: 6120.0,
-    },
-    {
-      productId: 9,
-      productName: "Lenovo ThinkPad P16",
-      image:
-        "http://localhost:8080/product-manager/images/3ff9b35d-2fac-4f60-976e-cb2f2349a59e.svg",
-      description:
-        "Engineered for performance, the Lenovo ThinkPad P16 delivers workstation-grade power with Intel Core i9, NVIDIA RTX A2000, and military-grade durability for professional creators.",
-      quantity: 5,
-      price: 6500.0,
-      discount: 12.0,
-      specialPrice: 5720.0,
-    },
-    {
-      productId: 7,
-      productName: "Dell XPS 13 Plus",
-      image:
-        "http://localhost:8080/product-manager/images/549a5b08-eec1-48b9-a2df-c9722dcc59e5.svg",
-      description:
-        "The Dell XPS 13 Plus redefines ultrabook excellence with its InfinityEdge display, minimalist design, and Intel Core Ultra 7 processor for professionals seeking both form and function.",
-      quantity: 7,
-      price: 5200.0,
-      discount: 10.0,
-      specialPrice: 4680.0,
-    },
-  ];
+  // const products = [
+  //   {
+  //     productId: 10,
+  //     productName: "HP ZBook Fury 16 G10",
+  //     image:
+  //       "http://localhost:8080/product-manager/images/ebb64a8c-71c8-497b-9dfd-c7018d9dc311.svg",
+  //     description:
+  //       "The HP ZBook Fury 16 G10 is a professional workstation designed for engineers and 3D creators, featuring advanced graphics, robust cooling, and unmatched reliability.",
+  //     quantity: 4,
+  //     price: 6800.0,
+  //     discount: 10.0,
+  //     specialPrice: 6120.0,
+  //   },
+  //   {
+  //     productId: 9,
+  //     productName: "Lenovo ThinkPad P16",
+  //     image:
+  //       "http://localhost:8080/product-manager/images/3ff9b35d-2fac-4f60-976e-cb2f2349a59e.svg",
+  //     description:
+  //       "Engineered for performance, the Lenovo ThinkPad P16 delivers workstation-grade power with Intel Core i9, NVIDIA RTX A2000, and military-grade durability for professional creators.",
+  //     quantity: 5,
+  //     price: 6500.0,
+  //     discount: 12.0,
+  //     specialPrice: 5720.0,
+  //   },
+  //   {
+  //     productId: 7,
+  //     productName: "Dell XPS 13 Plus",
+  //     image:
+  //       "http://localhost:8080/product-manager/images/549a5b08-eec1-48b9-a2df-c9722dcc59e5.svg",
+  //     description:
+  //       "The Dell XPS 13 Plus redefines ultrabook excellence with its InfinityEdge display, minimalist design, and Intel Core Ultra 7 processor for professionals seeking both form and function.",
+  //     quantity: 7,
+  //     price: 5200.0,
+  //     discount: 10.0,
+  //     specialPrice: 4680.0,
+  //   },
+  // ];
 
-  const pagination = {
-    pageNumber: 0,
-    pageSize: 50,
-    totalElements: 11,
-    totalPages: 1,
-    lastPage: true,
-  };
+  // const pagination = {
+  //   pageNumber: 0,
+  //   pageSize: 50,
+  //   totalElements: 11,
+  //   totalPages: 1,
+  //   lastPage: true,
+  // };
+
+  const { products, pagination } = useSelector((state) => state.products);
 
   const { isLoading, errorMessage } = useSelector((state) => state.errors);
 
   const [currentPage, setCurrentPage] = useState(
     pagination?.pageNumber + 1 || 1
   );
+
+  useDashboardProductFilter();
 
   const tableRecords = products?.map((item) => {
     return {
@@ -68,6 +73,7 @@ function AdminProducts() {
       description: item.description,
       discount: item.discount,
       image: item.image,
+      price: item.price,
       quantity: item.quantity,
       specialPrice: item.specialPrice,
     };

@@ -7,7 +7,7 @@ import Filter from "./Filter";
 
 import Loader from "../shared/Loader";
 import Paginations from "../shared/Paginations";
-import useProductFilter from "../../hooks/useProductFilter";
+import { useProductFilter } from "../../hooks/useProductFilter";
 
 function Products() {
   const { isLoading, errorMessage } = useSelector((state) => state.errors);
