@@ -3,13 +3,15 @@ import Loader from "../../../components/shared/Loader";
 import React, { useState } from "react";
 import { HiMiniShoppingCart } from "react-icons/hi2";
 import { MdAddShoppingCart } from "react-icons/md";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { DataGrid } from "@mui/x-data-grid";
 import { adminProductTableColumn } from "../../../components/helper/tableColumn";
 import { useDashboardProductFilter } from "../../../hooks/useProductFilter";
 import Modal from "../../../components/shared/Modal";
 import AddProductForm from "./AddProductForm";
 import DeleteModal from "../../../components/shared/DeleteModal";
+import { deleteProduct } from "../../../store/action";
+import toast from "react-hot-toast";
 
 function AdminProducts() {
   // const products = [
@@ -67,6 +69,8 @@ function AdminProducts() {
     pagination?.pageNumber + 1 || 1
   );
 
+  const dispatch = useDispatch();
+
   const [selectedProduct, setSelectedProduct] = useState("");
 
   const [openUpdateModal, setOpenUpdateModal] = useState(false);
@@ -74,6 +78,8 @@ function AdminProducts() {
   const [openAddModal, setOpenAddModal] = useState(false);
 
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
+
+  const [loader, setLoader] = useState(false);
 
   useDashboardProductFilter();
 
@@ -101,6 +107,11 @@ function AdminProducts() {
   const handleImageUpload = (product) => {};
   const handleProductView = (product) => {};
   const handlePaginationChange = (paginationModel) => {};
+  const onDeleteHandler = () => {
+    dispatch(
+      deleteProduct(setLoader, selectedProduct?.id, toast, setOpenDeleteModal)
+    );
+  };
 
   const emptyProduct = !products || products?.length === 0;
 
@@ -183,8 +194,9 @@ function AdminProducts() {
       <DeleteModal
         open={openDeleteModal}
         setOpen={setOpenDeleteModal}
+        loader={loader}
         title="Delete Product"
-        onDeleteHandler={() => {}}
+        onDeleteHandler={onDeleteHandler}
       />
     </div>
   );
