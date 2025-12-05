@@ -9,6 +9,7 @@ import { adminProductTableColumn } from "../../../components/helper/tableColumn"
 import { useDashboardProductFilter } from "../../../hooks/useProductFilter";
 import Modal from "../../../components/shared/Modal";
 import AddProductForm from "./AddProductForm";
+import DeleteModal from "../../../components/shared/DeleteModal";
 
 function AdminProducts() {
   // const products = [
@@ -72,6 +73,8 @@ function AdminProducts() {
 
   const [openAddModal, setOpenAddModal] = useState(false);
 
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+
   useDashboardProductFilter();
 
   const tableRecords = products?.map((item) => {
@@ -91,7 +94,10 @@ function AdminProducts() {
     setSelectedProduct(product);
     setOpenUpdateModal(true);
   };
-  const handleDelete = (product) => {};
+  const handleDelete = (product) => {
+    setSelectedProduct(product);
+    setOpenDeleteModal(true);
+  };
   const handleImageUpload = (product) => {};
   const handleProductView = (product) => {};
   const handlePaginationChange = (paginationModel) => {};
@@ -173,6 +179,13 @@ function AdminProducts() {
           update={openUpdateModal}
         />
       </Modal>
+
+      <DeleteModal
+        open={openDeleteModal}
+        setOpen={setOpenDeleteModal}
+        title="Delete Product"
+        onDeleteHandler={() => {}}
+      />
     </div>
   );
 }
