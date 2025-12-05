@@ -10,11 +10,15 @@ import {
 import toast from "react-hot-toast";
 import Spinners from "../../../components/shared/Spinners";
 import SelectTextField from "../../../components/shared/SelectTextField";
+import Skeleton from "../../../components/shared/Skeleton";
+import ErrorPage from "../../../components/shared/ErrorPage";
 
 function AddProductForm({ setOpen, product, update = false }) {
   const [loader, setLoader] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState();
   const { categories } = useSelector((state) => state.products);
+  const { categoryLoader, errorMessage } = useSelector((state) => state.errors);
+
   const dispatch = useDispatch();
   const {
     register,
@@ -53,6 +57,20 @@ function AddProductForm({ setOpen, product, update = false }) {
       dispatch(fetchCategories());
     }
   }, [dispatch, update]);
+
+  useEffect(() => {
+    if (!categoryLoader && categories) {
+      setSelectedCategory(categories[0]);
+    }
+  }, [categories, categoryLoader]);
+
+  if (categoryLoader) {
+    <Skeleton />;
+  }
+
+  if (errorMessage) {
+    <ErrorPage message={errorMessage} />;
+  }
 
   return (
     <div className="py-5 relative h-full">
