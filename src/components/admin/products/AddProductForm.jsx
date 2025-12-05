@@ -2,13 +2,19 @@ import { Button } from "@mui/material";
 import InputField from "../../../components/shared/InputField";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
-import { updateProductFromDashboard } from "../../../store/action";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchCategories,
+  updateProductFromDashboard,
+} from "../../../store/action";
 import toast from "react-hot-toast";
 import Spinners from "../../../components/shared/Spinners";
+import SelectTextField from "../../../components/shared/SelectTextField";
 
 function AddProductForm({ setOpen, product, update = false }) {
   const [loader, setLoader] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState();
+  const { categories } = useSelector((state) => state.products);
   const dispatch = useDispatch();
   const {
     register,
@@ -42,6 +48,12 @@ function AddProductForm({ setOpen, product, update = false }) {
     }
   }, [update, product]);
 
+  useEffect(() => {
+    if (!update) {
+      dispatch(fetchCategories());
+    }
+  }, [dispatch, update]);
+
   return (
     <div className="py-5 relative h-full">
       <form className="space-y-4" onSubmit={handleSubmit(saveProductHandler)}>
@@ -56,6 +68,15 @@ function AddProductForm({ setOpen, product, update = false }) {
             register={register}
             errors={errors}
           />
+
+          {!update && (
+            <SelectTextField
+              label="Select Categories"
+              select={selectedCategory}
+              setSelect={setSelectedCategory}
+              lists={categories}
+            />
+          )}
         </div>
 
         <div className="flex md:flex-row flex-col gap-4 w-full">
