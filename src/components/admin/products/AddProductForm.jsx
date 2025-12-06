@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  addNewProductFromDashboard,
   fetchCategories,
   updateProductFromDashboard,
 } from "../../../store/action";
@@ -30,6 +31,13 @@ function AddProductForm({ setOpen, product, update = false }) {
 
   const saveProductHandler = (data) => {
     if (!update) {
+      const sendData = {
+        ...data,
+        categoryId: selectedCategory.categoryId,
+      };
+      dispatch(
+        addNewProductFromDashboard(sendData, toast, reset, setLoader, setOpen)
+      );
     } else {
       const sendData = {
         ...data,
@@ -158,6 +166,7 @@ function AddProductForm({ setOpen, product, update = false }) {
                 ? "border-red-500 "
                 : "border-slate-700"
             }`}
+            maxLength={255}
             {...register("description", {
               required: { value: true, message: "Description is required" },
             })}
@@ -190,7 +199,7 @@ function AddProductForm({ setOpen, product, update = false }) {
                 <Spinners /> Loading...
               </div>
             ) : (
-              "Update"
+              "Save"
             )}
           </Button>
         </div>
