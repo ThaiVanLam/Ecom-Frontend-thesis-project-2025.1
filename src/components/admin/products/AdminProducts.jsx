@@ -13,6 +13,7 @@ import DeleteModal from "../../../components/shared/DeleteModal";
 import { deleteProduct } from "../../../store/action";
 import toast from "react-hot-toast";
 import ImageUploadForm from "./ImageUploadForm";
+import ProductViewModal from "../../../components/shared/ProductViewModal";
 
 function AdminProducts() {
   // const products = [
@@ -80,6 +81,8 @@ function AdminProducts() {
 
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
+  const [openProductViewModal, setOpenProductViewModal] = useState(false);
+
   const [openImageUploadModal, setOpenImageUploadModal] = useState(false);
 
   const [loader, setLoader] = useState(false);
@@ -111,7 +114,10 @@ function AdminProducts() {
     setSelectedProduct(product);
     setOpenImageUploadModal(true);
   };
-  const handleProductView = (product) => {};
+  const handleProductView = (product) => {
+    setSelectedProduct(product);
+    setOpenProductViewModal(true);
+  };
   const handlePaginationChange = (paginationModel) => {};
   const onDeleteHandler = () => {
     dispatch(
@@ -214,6 +220,12 @@ function AdminProducts() {
         loader={loader}
         title="Delete Product"
         onDeleteHandler={onDeleteHandler}
+      />
+
+      <ProductViewModal
+        open={openProductViewModal}
+        setOpen={setOpenProductViewModal}
+        product={selectedProduct}
       />
     </div>
   );
