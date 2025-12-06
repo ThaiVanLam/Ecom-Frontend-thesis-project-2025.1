@@ -3,16 +3,24 @@ import Spinners from "../../../components/shared/Spinners";
 import React, { useRef, useState } from "react";
 import { FaCloudUploadAlt } from "react-icons/fa";
 import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { updateProductImageFromDashboard } from "../../../store/action";
 
-function ImageUploadForm() {
+function ImageUploadForm({ setOpen, product }) {
   const [loader, setLoader] = useState(false);
   const fileInputRef = useRef();
   const [previewImage, setPreviewImage] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
+  const dispatch = useDispatch();
 
   const onHandleImageChange = (e) => {
     const file = e.target.files[0];
-    if (file && ["image/jpeg", "image/jpg", "image/png"].includes(file.type)) {
+    if (
+      file &&
+      ["image/jpeg", "image/jpg", "image/png", "image/svg+xml"].includes(
+        file.type
+      )
+    ) {
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreviewImage(reader.result);
@@ -20,12 +28,30 @@ function ImageUploadForm() {
       reader.readAsDataURL(file);
       setSelectedFile(file);
     } else {
-      toast.error("Please select a valid image file (.jpeg, .jpg, .png)");
+      toast.error("Please select a valid image file (.jpeg, .jpg, .png, .svg)");
       setPreviewImage(null);
       setSelectedFile(null);
     }
   };
-  const addNewImageHandler = () => {};
+  const addNewImageHandler = async (event) => {
+    event.preventDefault();
+    if (!selectedFile) {
+      toast.error("Please select an image before saving.");
+      return;
+    }
+    const formData = new FormData();
+    formData.append("image", selectedFile);
+
+    dispatch(
+      updateProductImageFromDashboard(
+        formData,
+        product.id,
+        toast,
+        setLoader,
+        setOpen
+      )
+    );
+  };
   const handleClearImage = () => {
     setPreviewImage(null);
     setSelectedFile(null);
@@ -43,7 +69,7 @@ function ImageUploadForm() {
               ref={fileInputRef}
               onChange={onHandleImageChange}
               className="hidden"
-              accept=".jpeg, .jpg, .png"
+              accept=".jpeg,.jpg,.png,.svg"
             />
           </label>
           {previewImage && (
