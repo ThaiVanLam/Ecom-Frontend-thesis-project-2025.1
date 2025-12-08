@@ -380,12 +380,15 @@ export const getOrdersForDashboard =
   };
 
 export const updateOrderStatusFromDashboard =
-  (orderId, orderStatus, toast, setLoader) => async (dispatch, getState) => {
+  (orderId, orderStatus, toast, setLoader, isAdmin) =>
+  async (dispatch, getState) => {
     try {
       setLoader(true);
 
+      const endpoint = isAdmin ? "admin/orders" : "seller/orders";
+
       const { data } = await api.put(
-        `/order-manager/api/admin/orders/${orderId}/status`,
+        `/order-manager/api/${endpoint}/${orderId}/status`,
         { status: orderStatus }
       );
 

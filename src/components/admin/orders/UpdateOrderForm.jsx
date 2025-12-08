@@ -9,7 +9,7 @@ import {
 import Spinners from "../../../components/shared/Spinners";
 import React, { useState } from "react";
 import { FaSpinner } from "react-icons/fa";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { updateOrderStatusFromDashboard } from "../../../store/action";
 import toast from "react-hot-toast";
 
@@ -37,6 +37,9 @@ function UpdateOrderForm({
 
   const dispatch = useDispatch();
 
+  const { user } = useSelector((state) => state.auth);
+  const isAdmin = user && user?.roles.includes("ROLE_ADMIN");
+
   const updateOrderStatus = (e) => {
     e.preventDefault();
     if (!orderStatus) {
@@ -44,7 +47,13 @@ function UpdateOrderForm({
       return;
     }
     dispatch(
-      updateOrderStatusFromDashboard(selectedId, orderStatus, toast, setLoader)
+      updateOrderStatusFromDashboard(
+        selectedId,
+        orderStatus,
+        toast,
+        setLoader,
+        isAdmin
+      )
     );
   };
 
