@@ -21,10 +21,10 @@ function PrivateRoute({ publicPage = false, adminOnly = false }) {
         return <Navigate to="/" replace />;
       }
     }
-  }
 
-  if (!isAdmin && !isSeller) {
-    return <Navigate to="/" />;
+    if (!isAdmin && !isSeller) {
+      return <Navigate to="/" />;
+    }
   }
 
   return user ? <Outlet /> : <Navigate to="/login" />;
