@@ -351,30 +351,33 @@ export const analyticsAction = () => async (dispatch, getState) => {
   }
 };
 
-export const getOrdersForDashboard = (queryString) => async (dispatch) => {
-  try {
-    dispatch({ type: "IS_FETCHING" });
-    const { data } = await api.get(
-      `/order-manager/api/admin/orders?${queryString}`
-    );
+export const getOrdersForDashboard =
+  (queryString, isAdmin) => async (dispatch) => {
+    try {
+      dispatch({ type: "IS_FETCHING" });
+      const endpoint = isAdmin ? "admin/orders" : "seller/orders";
+      const { data } = await api.get(
+        `/order-manager/api/${endpoint}?${queryString}`
+      );
 
-    dispatch({
-      type: "GET_ADMIN_ORDERS",
-      payload: data.content,
-      pageNumber: data.pageNumber,
-      pageSize: data.pageSize,
-      totalElements: data.totalElements,
-      totalPages: data.totalPages,
-      lastPage: data.lastPage,
-    });
-    dispatch({ type: "IS_SUCCESS" });
-  } catch (error) {
-    dispatch({
-      type: "IS_ERROR",
-      payload: error?.response?.data?.message || "Failed to fetch orders data",
-    });
-  }
-};
+      dispatch({
+        type: "GET_ADMIN_ORDERS",
+        payload: data.content,
+        pageNumber: data.pageNumber,
+        pageSize: data.pageSize,
+        totalElements: data.totalElements,
+        totalPages: data.totalPages,
+        lastPage: data.lastPage,
+      });
+      dispatch({ type: "IS_SUCCESS" });
+    } catch (error) {
+      dispatch({
+        type: "IS_ERROR",
+        payload:
+          error?.response?.data?.message || "Failed to fetch orders data",
+      });
+    }
+  };
 
 export const updateOrderStatusFromDashboard =
   (orderId, orderStatus, toast, setLoader) => async (dispatch, getState) => {
