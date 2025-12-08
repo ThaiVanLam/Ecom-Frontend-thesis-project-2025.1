@@ -7,6 +7,7 @@ import {
   FaStore,
   FaThList,
 } from "react-icons/fa";
+import { current } from "@reduxjs/toolkit";
 
 export const bannerLists = [
   {
@@ -44,4 +45,13 @@ export const adminNavigation = [
     icon: FaThList,
   },
   { name: "Sellers", href: "/admin/sellers", icon: FaStore },
+];
+export const sellerNavigation = [
+  {
+    name: "Orders",
+    href: "/admin/orders",
+    icon: FaShoppingCart,
+    current: true,
+  },
+  { name: "Products", href: "/admin/products", icon: FaBoxOpen, current: true },
 ];

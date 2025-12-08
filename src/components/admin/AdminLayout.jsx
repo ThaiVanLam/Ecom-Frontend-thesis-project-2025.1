@@ -14,6 +14,7 @@ import { FaBars } from "react-icons/fa";
 
 function AdminLayout() {
   let [sidebarOpen, setSidebarOpen] = useState(false);
+
   return (
     <div>
       <Dialog
