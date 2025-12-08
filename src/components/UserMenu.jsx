@@ -6,7 +6,7 @@ import Avatar from "@mui/material/Avatar";
 import { Link, useNavigate } from "react-router-dom";
 import { BiUser } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
-import { FaShoppingCart } from "react-icons/fa";
+import { FaShoppingCart, FaUserShield } from "react-icons/fa";
 import { HiMiniShoppingCart } from "react-icons/hi2";
 import { IoExitOutline } from "react-icons/io5";
 import BackDrop from "./BackDrop";
@@ -18,6 +18,9 @@ function UserMenu() {
   const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const isAdmin = user && user?.roles.includes("ROLE_ADMIN");
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -62,6 +65,14 @@ function UserMenu() {
             <span className="font-semibold">Order</span>
           </MenuItem>
         </Link>
+        {isAdmin && (
+          <Link to="/admin">
+            <MenuItem onClick={handleClose} className="flex gap-2">
+              <FaUserShield className="text-xl" />
+              <span className="font-semibold">Admin Panel</span>
+            </MenuItem>
+          </Link>
+        )}
 
         <MenuItem onClick={logoutHandler} className="flex gap-2">
           <div className="font-semibold w-full flex gap-2 items-center bg-button-gradient px-4 py-1 text-white rounded-sm ">
