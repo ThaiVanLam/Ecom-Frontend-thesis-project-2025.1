@@ -3,6 +3,8 @@ const initialState = {
   address: [],
   clientSecret: null,
   selectedUserCheckoutAddress: null,
+  sellers: null,
+  pagination: {},
 };
 
 export const authReducer = (state = initialState, action) => {
@@ -25,7 +27,19 @@ export const authReducer = (state = initialState, action) => {
       };
     case "LOG_OUT":
       return { user: null, address: null };
-
+    case "FETCH_SELLERS":
+      return {
+        ...state,
+        sellers: action.payload,
+        pagination: {
+          ...state.pagination,
+          pageNumber: action.pageNumber,
+          pageSize: action.pageSize,
+          totalElements: action.totalElements,
+          totalPages: action.totalPages,
+          lastPage: action.lastPage,
+        },
+      };
     default:
       return state;
   }

@@ -578,3 +578,29 @@ export const deleteCategory =
       toast.error(error?.response?.data?.message || "Some Error Occured");
     }
   };
+
+export const dashboardSellersAction = (queryString) => async (dispatch) => {
+  try {
+    dispatch({ type: "IS_FETCHING" });
+    const { data } = await api.get(
+      `/user-manager/api/auth/sellers?${queryString}`
+    );
+
+    dispatch({
+      type: "FETCH_SELLERS",
+      payload: data.content,
+      pageNumber: data.pageNumber,
+      pageSize: data.pageSize,
+      totalElements: data.totalElements,
+      totalPages: data.totalPages,
+      lastPage: data.lastPage,
+    });
+    dispatch({ type: "IS_SUCCESS" });
+  } catch (error) {
+    dispatch({
+      type: "IS_ERROR",
+      payload:
+        error?.response?.data?.message || "Failed to fetch dashboard sellers",
+    });
+  }
+};
