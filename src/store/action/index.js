@@ -456,8 +456,10 @@ export const addNewProductFromDashboard =
       setOpen(false);
       await dispatch(dashboardProductsAction());
     } catch (error) {
-      console.error(err);
-      toast.error(err?.response?.data.description || "Product creation failed");
+      console.error(error);
+      toast.error(
+        error?.response?.data.description || "Product creation failed"
+      );
     } finally {
       setLoader(false);
     }
@@ -535,9 +537,9 @@ export const addNewCategoryFromDashboard =
       setOpen(false);
       await dispatch(dashboardCategoriesAction());
     } catch (error) {
-      console.error(err);
+      console.error(error);
       toast.error(
-        err?.response?.data.description || "Category creation failed"
+        error?.response?.data.description || "Category creation failed"
       );
     } finally {
       setLoader(false);
@@ -604,3 +606,46 @@ export const dashboardSellersAction = (queryString) => async (dispatch) => {
     });
   }
 };
+
+export const fetchSellers = () => async (dispatch) => {
+  try {
+    dispatch({ type: "CATEGORY_LOADER" });
+    const { data } = await api.get(`/user-manager/api/auth/sellers`);
+
+    dispatch({
+      type: "FETCH_SELLERS",
+      payload: data.content,
+      pageNumber: data.pageNumber,
+      pageSize: data.pageSize,
+      totalElements: data.totalElements,
+      totalPages: data.totalPages,
+      lastPage: data.lastPage,
+    });
+    dispatch({ type: "IS_ERROR" });
+  } catch (error) {
+    dispatch({
+      type: "IS_ERROR",
+      payload: error?.response?.data?.message || "Failed to fetch sellers",
+    });
+  }
+};
+
+export const addNewSellerFromDashboard =
+  (sendData, toast, reset, setLoader, setOpen) =>
+  async (dispatch, getState) => {
+    try {
+      setLoader(true);
+      await api.post(`/user-manager/api/auth/signup`, sendData);
+      toast.success("Seller created successfully");
+      reset();
+      setOpen(false);
+      await dispatch(dashboardSellersAction());
+    } catch (error) {
+      console.error(error);
+      toast.error(
+        error?.response?.data.description || "Seller creation failed"
+      );
+    } finally {
+      setLoader(false);
+    }
+  };

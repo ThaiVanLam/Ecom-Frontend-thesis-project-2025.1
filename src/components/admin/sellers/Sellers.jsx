@@ -98,7 +98,11 @@ function Sellers() {
         </>
       )}
 
-      <Modal open={openAddModal} setOpen={setOpenAddModal} title="Add Seller">
+      <Modal
+        open={openAddModal}
+        setOpen={setOpenAddModal}
+        title="Add New Seller"
+      >
         <AddSellerForm setOpen={setOpenAddModal} seller={selectedSeller} />
       </Modal>
     </div>

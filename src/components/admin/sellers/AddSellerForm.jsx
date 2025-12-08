@@ -5,7 +5,9 @@ import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addNewProductFromDashboard,
+  addNewSellerFromDashboard,
   fetchCategories,
+  fetchSellers,
   updateProductFromDashboard,
 } from "../../../store/action";
 import toast from "react-hot-toast";
@@ -14,11 +16,11 @@ import SelectTextField from "../../shared/SelectTextField";
 import Skeleton from "../../shared/Skeleton";
 import ErrorPage from "../../shared/ErrorPage";
 
-function AddSellerForm({ setOpen, product, update = false }) {
+function AddSellerForm({ setOpen, seller, update = false }) {
   const [loader, setLoader] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState();
-  const { categories } = useSelector((state) => state.products);
-  const { categoryLoader, errorMessage } = useSelector((state) => state.errors);
+
+  const { sellers } = useSelector((state) => state.auth);
+  const { errorMessage } = useSelector((state) => state.errors);
 
   const dispatch = useDispatch();
   const {
@@ -29,52 +31,23 @@ function AddSellerForm({ setOpen, product, update = false }) {
     formState: { errors },
   } = useForm({ mode: "onTouched" });
 
-  const saveProductHandler = (data) => {
+  const saveSellerHandler = (data) => {
     if (!update) {
       const sendData = {
         ...data,
-        categoryId: selectedCategory.categoryId,
+        roles: ["seller"],
       };
       dispatch(
-        addNewProductFromDashboard(sendData, toast, reset, setLoader, setOpen)
-      );
-    } else {
-      const sendData = {
-        ...data,
-        id: product.id,
-      };
-      dispatch(
-        updateProductFromDashboard(sendData, toast, reset, setLoader, setOpen)
+        addNewSellerFromDashboard(sendData, toast, reset, setLoader, setOpen)
       );
     }
   };
 
   useEffect(() => {
-    if (update && product) {
-      setValue("productName", product?.productName);
-      setValue("price", product?.price);
-      setValue("quantity", product?.quantity);
-      setValue("discount", product?.discount);
-      setValue("specialPrice", product?.specialPrice);
-      setValue("description", product?.description);
-    }
-  }, [update, product]);
-
-  useEffect(() => {
     if (!update) {
-      dispatch(fetchCategories());
+      dispatch(fetchSellers());
     }
   }, [dispatch, update]);
-
-  useEffect(() => {
-    if (!categoryLoader && categories) {
-      setSelectedCategory(categories[0]);
-    }
-  }, [categories, categoryLoader]);
-
-  if (categoryLoader) {
-    <Skeleton />;
-  }
 
   if (errorMessage) {
     <ErrorPage message={errorMessage} />;
@@ -82,100 +55,42 @@ function AddSellerForm({ setOpen, product, update = false }) {
 
   return (
     <div className="py-5 relative h-full">
-      <form className="space-y-4" onSubmit={handleSubmit(saveProductHandler)}>
+      <form className="space-y-4" onSubmit={handleSubmit(saveSellerHandler)}>
         <div className="flex md:flex-row flex-col gap-4 w-full">
           <InputField
-            label="Product Name"
+            label="Username"
             required
-            id="productName"
+            id="username"
             type="text"
             message="This field is required*"
-            placeholder="Product Name"
+            placeholder="Enter your username"
             register={register}
             errors={errors}
           />
-
-          {!update && (
-            <SelectTextField
-              label="Select Categories"
-              select={selectedCategory}
-              setSelect={setSelectedCategory}
-              lists={categories}
-            />
-          )}
         </div>
-
         <div className="flex md:flex-row flex-col gap-4 w-full">
           <InputField
-            label="Price"
+            label="Email"
             required
-            id="price"
-            type="number"
+            id="email"
+            type="text"
             message="This field is required*"
-            placeholder="Product Price"
-            register={register}
-            errors={errors}
-          />
-
-          <InputField
-            label="Quantity"
-            required
-            id="quantity"
-            type="number"
-            message="This field is required*"
-            placeholder="Product Quantity"
+            placeholder="Enter your email"
             register={register}
             errors={errors}
           />
         </div>
-
         <div className="flex md:flex-row flex-col gap-4 w-full">
           <InputField
-            label="Discount"
-            id="discount"
-            type="number"
+            label="Password"
+            required
+            id="password"
+            type="text"
             message="This field is required*"
-            placeholder="Product Discount"
+            placeholder="Enter your password"
             register={register}
             errors={errors}
           />
-          <InputField
-            label="Special Price"
-            id="specialPrice"
-            type="number"
-            message="This field is required*"
-            placeholder="Product special price"
-            register={register}
-            errors={errors}
-          />
-        </div>
-
-        <div className="flex flex-col gap-4 w-full">
-          <label
-            htmlFor="desc"
-            className="font-semibold text-sm text-slate-800"
-          >
-            Description
-          </label>
-
-          <textarea
-            rows={5}
-            placeholder="Add product description...."
-            className={`px-4 py-2 w-full border outline-none bg-transparent text-slate-800 rounded-md ${
-              errors["description"]?.message
-                ? "border-red-500 "
-                : "border-slate-700"
-            }`}
-            maxLength={255}
-            {...register("description", {
-              required: { value: true, message: "Description is required" },
-            })}
-          />
-          {errors["description"]?.message && (
-            <p className="text-sm font-semibold text-red-600 mt-0">
-              {errors["description"]?.message}
-            </p>
-          )}
         </div>
 
         <div className="flex w-full justify-between items-center absolute bottom-14">
@@ -199,7 +114,7 @@ function AddSellerForm({ setOpen, product, update = false }) {
                 <Spinners /> Loading...
               </div>
             ) : (
-              "Save"
+              "Add New Seller"
             )}
           </Button>
         </div>
