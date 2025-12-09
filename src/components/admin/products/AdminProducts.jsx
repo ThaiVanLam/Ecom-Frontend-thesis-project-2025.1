@@ -88,6 +88,9 @@ function AdminProducts() {
 
   const [loader, setLoader] = useState(false);
 
+  const { user } = useSelector((state) => state.auth);
+  const isAdmin = user && user?.roles.includes("ROLE_ADMIN");
+
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const params = new URLSearchParams(searchParams);
@@ -237,6 +240,7 @@ function AdminProducts() {
         open={openProductViewModal}
         setOpen={setOpenProductViewModal}
         product={selectedProduct}
+        isFromPanel
       />
     </div>
   );

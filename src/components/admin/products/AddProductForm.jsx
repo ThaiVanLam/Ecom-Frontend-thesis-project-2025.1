@@ -21,6 +21,10 @@ function AddProductForm({ setOpen, product, update = false }) {
   const { categoryLoader, errorMessage } = useSelector((state) => state.errors);
 
   const dispatch = useDispatch();
+
+  const { user } = useSelector((state) => state.auth);
+  const isAdmin = user && user?.roles.includes("ROLE_ADMIN");
+
   const {
     register,
     handleSubmit,
@@ -44,7 +48,14 @@ function AddProductForm({ setOpen, product, update = false }) {
         id: product.id,
       };
       dispatch(
-        updateProductFromDashboard(sendData, toast, reset, setLoader, setOpen)
+        updateProductFromDashboard(
+          sendData,
+          toast,
+          reset,
+          setLoader,
+          setOpen,
+          isAdmin
+        )
       );
     }
   };

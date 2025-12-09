@@ -15,6 +15,7 @@ export default function ProductViewModal({
   setOpen,
   product,
   isAvailable,
+  isFromPanel = false,
 }) {
   const {
     id,
@@ -30,6 +31,10 @@ export default function ProductViewModal({
   const handleClickOpen = () => {
     setOpen(true);
   };
+
+  if (isFromPanel) {
+    isAvailable = quantity && Number(quantity) > 0;
+  }
 
   return (
     <>
