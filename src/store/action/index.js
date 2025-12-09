@@ -453,12 +453,13 @@ export const updateProductFromDashboard =
   };
 
 export const addNewProductFromDashboard =
-  (sendData, toast, reset, setLoader, setOpen) =>
+  (sendData, toast, reset, setLoader, setOpen, isAdmin) =>
   async (dispatch, getState) => {
     try {
       setLoader(true);
+      const endpoint = isAdmin ? "admin/categories" : "seller/categories";
       await api.post(
-        `/product-manager/api/admin/categories/${sendData.categoryId}/product`,
+        `/product-manager/api/${endpoint}/${sendData.categoryId}/product`,
         sendData
       );
       toast.success("Product created successfully");

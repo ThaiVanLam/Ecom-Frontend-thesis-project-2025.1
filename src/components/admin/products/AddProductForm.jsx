@@ -40,7 +40,14 @@ function AddProductForm({ setOpen, product, update = false }) {
         categoryId: selectedCategory.categoryId,
       };
       dispatch(
-        addNewProductFromDashboard(sendData, toast, reset, setLoader, setOpen)
+        addNewProductFromDashboard(
+          sendData,
+          toast,
+          reset,
+          setLoader,
+          setOpen,
+          isAdmin
+        )
       );
     } else {
       const sendData = {
