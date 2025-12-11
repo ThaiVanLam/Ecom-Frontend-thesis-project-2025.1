@@ -467,7 +467,7 @@ export const addNewProductFromDashboard =
       toast.success("Product created successfully");
       reset();
       setOpen(false);
-      await dispatch(dashboardProductsAction());
+      await dispatch(dashboardProductsAction("pageNumber=0", isAdmin));
     } catch (error) {
       console.error(error);
       toast.error(
@@ -488,7 +488,7 @@ export const deleteProduct =
       toast.success("Product deleted successfully");
       setLoader(false);
       setOpenDeleteModal(false);
-      await dispatch(dashboardProductsAction(isAdmin));
+      await dispatch(dashboardProductsAction("pageNumber=0", isAdmin));
     } catch (error) {
       toast.error(error?.response?.data?.message || "Some Error Occured");
     }
@@ -507,7 +507,7 @@ export const updateProductImageFromDashboard =
       toast.success("Image upload successful");
       setLoader(false);
       setOpen(false);
-      await dispatch(dashboardProductsAction());
+      await dispatch(dashboardProductsAction("pageNumber=0", isAdmin));
     } catch (error) {
       toast.error(
         error?.response?.data?.description || "Product Image update failed"
