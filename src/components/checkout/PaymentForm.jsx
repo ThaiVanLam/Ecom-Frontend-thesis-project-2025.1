@@ -39,7 +39,7 @@ function PaymentForm({ clientSecret, totalPrice }) {
 
   const isLoading = !clientSecret || !stripe || !elements;
   return (
-    <form onSubmit={handleSubmit} className="max-w-lg mx-auto p-4">
+    <form onSubmit={handleSubmit} className="max-w-lg mx-auto p-4 m mb-14">
       <h2 className="text-xl font-semibold mb-4">Payment Information</h2>
       {isLoading ? (
         <Skeleton />

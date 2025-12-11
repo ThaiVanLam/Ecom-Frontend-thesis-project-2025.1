@@ -40,6 +40,9 @@ export const cartReducer = (state = initialState, action) => {
           (item) => item.productId !== action.payload.productId
         ),
       };
+
+    case "REMOVE_WHOLE_CART":
+      return { ...state, cart: [] };
     case "GET_USER_CART_PRODUCTS":
       return {
         ...state,

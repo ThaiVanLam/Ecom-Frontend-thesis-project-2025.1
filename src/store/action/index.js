@@ -154,6 +154,8 @@ export const registerNewUser =
 export const logoutUser = (navigate) => (dispatch) => {
   dispatch({ type: "LOG_OUT" });
   localStorage.removeItem("auth");
+  dispatch({ type: "REMOVE_WHOLE_CART" });
+  localStorage.removeItem("cartItems");
   navigate("/login");
 };
 
@@ -486,7 +488,7 @@ export const deleteProduct =
       toast.success("Product deleted successfully");
       setLoader(false);
       setOpenDeleteModal(false);
-      await dispatch(dashboardProductsAction());
+      await dispatch(dashboardProductsAction(isAdmin));
     } catch (error) {
       toast.error(error?.response?.data?.message || "Some Error Occured");
     }

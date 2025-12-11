@@ -135,7 +135,13 @@ function AdminProducts() {
   };
   const onDeleteHandler = () => {
     dispatch(
-      deleteProduct(setLoader, selectedProduct?.id, toast, setOpenDeleteModal)
+      deleteProduct(
+        setLoader,
+        selectedProduct?.id,
+        toast,
+        setOpenDeleteModal,
+        isAdmin
+      )
     );
   };
 

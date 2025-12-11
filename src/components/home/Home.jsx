@@ -5,6 +5,7 @@ import { fetchProducts } from "../../store/action";
 import ProductCard from "../shared/ProductCard";
 import Loader from "../shared/Loader";
 import { FaExclamationTriangle } from "react-icons/fa";
+import Footer from "./Footer";
 
 function Home() {
   const { products } = useSelector((state) => state.products);
@@ -48,6 +49,7 @@ function Home() {
               .map((item, i) => <ProductCard key={i} {...item} />)}
         </div>
       )}
+      <Footer />
     </div>
   );
 }
