@@ -446,7 +446,7 @@ export const updateProductFromDashboard =
       reset();
       setLoader(false);
       setOpen(false);
-      await dispatch(dashboardProductsAction());
+      await dispatch(dashboardProductsAction("pageNumber=0", isAdmin));
     } catch (error) {
       toast.error(
         error?.response?.data?.description || "Product update failed"

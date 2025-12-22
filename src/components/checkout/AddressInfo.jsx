@@ -48,7 +48,7 @@ function AddressInfo({ address }) {
           </button>
         </div>
       ) : (
-        <div className="relative p-6 rounded-lg max-w-md mx-auto">
+        <div className="relative p-6 rounded-lg max-w-md mx-auto mb-14">
           <h1 className="text-slate-800 text-center font-bold text-2xl">
             Select Address
           </h1>

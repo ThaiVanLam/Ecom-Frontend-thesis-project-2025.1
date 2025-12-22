@@ -1,11 +1,9 @@
-import React, { useEffect } from "react";
-import HeroBanner from "./HeroBanner";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts } from "../../store/action";
 import ProductCard from "../shared/ProductCard";
 import Loader from "../shared/Loader";
 import { FaExclamationTriangle } from "react-icons/fa";
-import Footer from "./Footer";
 
 function Home() {
   const { products } = useSelector((state) => state.products);
@@ -19,10 +17,6 @@ function Home() {
   }, [dispatch]);
   return (
     <div className="lg:px-14 sm:px-8 px-4">
-      <div className="py-6">
-        <HeroBanner />
-      </div>
-
       <div className="py-5">
         <div className="flex flex-col justify-center items-center space-y-2">
           <h1 className="text-slate-800 text-4xl font-bold">Products</h1>
@@ -49,7 +43,6 @@ function Home() {
               .map((item, i) => <ProductCard key={i} {...item} />)}
         </div>
       )}
-      <Footer />
     </div>
   );
 }
