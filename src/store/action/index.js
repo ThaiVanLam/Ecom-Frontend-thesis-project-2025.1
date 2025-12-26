@@ -395,7 +395,7 @@ export const updateOrderStatusFromDashboard =
       );
 
       toast.success(data.message || "Order updated successfully");
-      await dispatch(getOrdersForDashboard());
+      await dispatch(getOrdersForDashboard("pageNumber=0", isAdmin));
     } catch (error) {
       console.log(error);
       toast.error(error?.response?.data?.message || "Internal Server Error");
