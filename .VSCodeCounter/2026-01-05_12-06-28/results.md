@@ -1,0 +1,21 @@
+# Summary
+
+Date : 2026-01-05 12:06:28
+
+Directory e:\\file_tai_lieu\\Course\\do_an_tot_nghiep\\do_an_tot_nghiep_main_folder\\Laptopshop-ecommerce-project-thesis\\frontend\\src\\api
+
+Total : 1 files,  6 codes, 0 comments, 3 blanks, all 9 lines
+
+Summary / [Details](details.md) / [Diff Summary](diff.md) / [Diff Details](diff-details.md)
+
+## Languages
+| language | files | code | comment | blank | total |
+| :--- | ---: | ---: | ---: | ---: | ---: |
+| JavaScript JSX | 1 | 6 | 0 | 3 | 9 |
+
+## Directories
+| path | files | code | comment | blank | total |
+| :--- | ---: | ---: | ---: | ---: | ---: |
+| . | 1 | 6 | 0 | 3 | 9 |
+
+Summary / [Details](details.md) / [Diff Summary](diff.md) / [Diff Details](diff-details.md)

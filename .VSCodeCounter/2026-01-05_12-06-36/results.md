@@ -1,0 +1,21 @@
+# Summary
+
+Date : 2026-01-05 12:06:36
+
+Directory e:\\file_tai_lieu\\Course\\do_an_tot_nghiep\\do_an_tot_nghiep_main_folder\\Laptopshop-ecommerce-project-thesis\\frontend\\src\\assets
+
+Total : 1 files,  1 codes, 0 comments, 0 blanks, all 1 lines
+
+Summary / [Details](details.md) / [Diff Summary](diff.md) / [Diff Details](diff-details.md)
+
+## Languages
+| language | files | code | comment | blank | total |
+| :--- | ---: | ---: | ---: | ---: | ---: |
+| XML | 1 | 1 | 0 | 0 | 1 |
+
+## Directories
+| path | files | code | comment | blank | total |
+| :--- | ---: | ---: | ---: | ---: | ---: |
+| . | 1 | 1 | 0 | 0 | 1 |
+
+Summary / [Details](details.md) / [Diff Summary](diff.md) / [Diff Details](diff-details.md)
