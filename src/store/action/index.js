@@ -5,7 +5,7 @@ export const fetchProducts = (queryString) => async (dispatch) => {
   try {
     dispatch({ type: "IS_FETCHING" });
     const { data } = await api.get(
-      `/product-manager/api/public/products?${queryString}`
+      `/product-manager/api/public/products?${queryString}`,
     );
 
     dispatch({
@@ -56,7 +56,7 @@ export const addToCart =
 
     console.log(data);
     const getProduct = products.find(
-      (item) => item.productId === data.productId
+      (item) => item.productId === data.productId,
     );
 
     const isQuantityExist = getProduct.quantity >= qty;
@@ -75,7 +75,7 @@ export const increaseCartQuantity =
   (dispatch, getState) => {
     const { products } = getState().products;
     const getProduct = products.find(
-      (item) => item.productId === data.productId
+      (item) => item.productId === data.productId,
     );
 
     const isQuantityExist = getProduct.quantity >= currentQuantity + 1;
@@ -112,7 +112,7 @@ export const authenticateSigninUser =
       setLoader(true);
       const { data } = await api.post(
         "/user-manager/api/auth/signin",
-        sendData
+        sendData,
       );
       dispatch({ type: "LOGIN_USER", payload: data });
       localStorage.setItem("auth", JSON.stringify(data));
@@ -133,7 +133,7 @@ export const registerNewUser =
       setLoader(true);
       const { data } = await api.post(
         "/user-manager/api/auth/signup",
-        sendData
+        sendData,
       );
 
       reset();
@@ -144,7 +144,7 @@ export const registerNewUser =
       toast.error(
         error?.response?.data?.message ||
           error?.response?.data?.password ||
-          "Internal Server Error"
+          "Internal Server Error",
       );
     } finally {
       setLoader(false);
@@ -169,7 +169,7 @@ export const addUpdateUserAddress =
       if (!addressId) {
         const { data } = await api.post(
           "/user-manager/api/addresses",
-          sendData
+          sendData,
         );
       } else {
         await api.put(`/user-manager/api/addresses/${addressId}`, sendData);
@@ -285,7 +285,7 @@ export const createStripePaymentSecret =
       dispatch({ type: "IS_FETCHING" });
       const { data } = await api.post(
         "/order-manager/api/order/stripe-client-secret",
-        sendData
+        sendData,
       );
       dispatch({ type: "CLIENT_SECRET", payload: data });
       localStorage.setItem("client-secret", JSON.stringify(data));
@@ -293,7 +293,7 @@ export const createStripePaymentSecret =
     } catch (error) {
       console.log(error);
       toast.error(
-        error?.response?.data?.message || "Failed to create client secret"
+        error?.response?.data?.message || "Failed to create client secret",
       );
     }
   };
@@ -304,7 +304,7 @@ export const stripePaymentConfirmation =
     try {
       const response = await api.post(
         "/order-manager/api/order/users/payments/online",
-        sendData
+        sendData,
       );
       console.log(response);
       if (response.data) {
@@ -359,7 +359,7 @@ export const getOrdersForDashboard =
       dispatch({ type: "IS_FETCHING" });
       const endpoint = isAdmin ? "admin/orders" : "seller/orders";
       const { data } = await api.get(
-        `/order-manager/api/${endpoint}?${queryString}`
+        `/order-manager/api/${endpoint}?${queryString}`,
       );
 
       dispatch({
@@ -381,6 +381,31 @@ export const getOrdersForDashboard =
     }
   };
 
+export const getOrdersForCustomer = (queryString) => async (dispatch) => {
+  try {
+    dispatch({ type: "IS_FETCHING" });
+    const { data } = await api.get(
+      `/order-manager/api/order/users/orders?${queryString}`,
+    );
+
+    dispatch({
+      type: "GET_ADMIN_ORDERS",
+      payload: data.content,
+      pageNumber: data.pageNumber,
+      pageSize: data.pageSize,
+      totalElements: data.totalElements,
+      totalPages: data.totalPages,
+      lastPage: data.lastPage,
+    });
+    dispatch({ type: "IS_SUCCESS" });
+  } catch (error) {
+    dispatch({
+      type: "IS_ERROR",
+      payload: error?.response?.data?.message || "Failed to fetch orders data",
+    });
+  }
+};
+
 export const updateOrderStatusFromDashboard =
   (orderId, orderStatus, toast, setLoader, isAdmin) =>
   async (dispatch, getState) => {
@@ -391,7 +416,7 @@ export const updateOrderStatusFromDashboard =
 
       const { data } = await api.put(
         `/order-manager/api/${endpoint}/${orderId}/status`,
-        { status: orderStatus }
+        { status: orderStatus },
       );
 
       toast.success(data.message || "Order updated successfully");
@@ -410,7 +435,7 @@ export const dashboardProductsAction =
       dispatch({ type: "IS_FETCHING" });
       const endpoint = isAdmin ? "admin/products" : "seller/products";
       const { data } = await api.get(
-        `/product-manager/api/${endpoint}?${queryString}`
+        `/product-manager/api/${endpoint}?${queryString}`,
       );
 
       dispatch({
@@ -440,7 +465,7 @@ export const updateProductFromDashboard =
       const endpoint = isAdmin ? "admin/products" : "seller/products";
       await api.put(
         `/product-manager/api/${endpoint}/${sendData.id}`,
-        sendData
+        sendData,
       );
       toast.success("Product update successful");
       reset();
@@ -449,7 +474,7 @@ export const updateProductFromDashboard =
       await dispatch(dashboardProductsAction("pageNumber=0", isAdmin));
     } catch (error) {
       toast.error(
-        error?.response?.data?.description || "Product update failed"
+        error?.response?.data?.description || "Product update failed",
       );
     }
   };
@@ -462,7 +487,7 @@ export const addNewProductFromDashboard =
       const endpoint = isAdmin ? "admin/categories" : "seller/categories";
       await api.post(
         `/product-manager/api/${endpoint}/${sendData.categoryId}/product`,
-        sendData
+        sendData,
       );
       toast.success("Product created successfully");
       reset();
@@ -471,7 +496,7 @@ export const addNewProductFromDashboard =
     } catch (error) {
       console.error(error);
       toast.error(
-        error?.response?.data.description || "Product creation failed"
+        error?.response?.data.description || "Product creation failed",
       );
     } finally {
       setLoader(false);
@@ -502,7 +527,7 @@ export const updateProductImageFromDashboard =
       const endpoint = isAdmin ? "admin/products" : "seller/products";
       await api.put(
         `/product-manager/api/${endpoint}/${productId}/image`,
-        formData
+        formData,
       );
       toast.success("Image upload successful");
       setLoader(false);
@@ -510,7 +535,7 @@ export const updateProductImageFromDashboard =
       await dispatch(dashboardProductsAction("pageNumber=0", isAdmin));
     } catch (error) {
       toast.error(
-        error?.response?.data?.description || "Product Image update failed"
+        error?.response?.data?.description || "Product Image update failed",
       );
     }
   };
@@ -519,7 +544,7 @@ export const dashboardCategoriesAction = (queryString) => async (dispatch) => {
   try {
     dispatch({ type: "IS_FETCHING" });
     const { data } = await api.get(
-      `/product-manager/api/public/categories?${queryString}`
+      `/product-manager/api/public/categories?${queryString}`,
     );
 
     dispatch({
@@ -555,7 +580,7 @@ export const addNewCategoryFromDashboard =
     } catch (error) {
       console.error(error);
       toast.error(
-        error?.response?.data.description || "Category creation failed"
+        error?.response?.data.description || "Category creation failed",
       );
     } finally {
       setLoader(false);
@@ -568,7 +593,7 @@ export const updateCategoryFromDashboard =
       setLoader(true);
       await api.put(
         `/product-manager/api/admin/categories/${sendData.id}`,
-        sendData
+        sendData,
       );
       toast.success("Category update successful");
       reset();
@@ -577,7 +602,7 @@ export const updateCategoryFromDashboard =
       await dispatch(dashboardCategoriesAction());
     } catch (error) {
       toast.error(
-        error?.response?.data?.description || "Category update failed"
+        error?.response?.data?.description || "Category update failed",
       );
     }
   };
@@ -601,7 +626,7 @@ export const dashboardSellersAction = (queryString) => async (dispatch) => {
   try {
     dispatch({ type: "IS_FETCHING" });
     const { data } = await api.get(
-      `/user-manager/api/auth/sellers?${queryString}`
+      `/user-manager/api/auth/sellers?${queryString}`,
     );
 
     dispatch({
@@ -659,7 +684,7 @@ export const addNewSellerFromDashboard =
     } catch (error) {
       console.error(error);
       toast.error(
-        error?.response?.data.description || "Seller creation failed"
+        error?.response?.data.description || "Seller creation failed",
       );
     } finally {
       setLoader(false);
