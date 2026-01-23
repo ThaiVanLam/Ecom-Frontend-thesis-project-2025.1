@@ -1,22 +1,41 @@
 import {
-  Description,
   Dialog,
   DialogBackdrop,
   DialogPanel,
-  DialogTitle,
   TransitionChild,
 } from "@headlessui/react";
 import Sidebar from "../shared/Sidebar";
 import React, { useState } from "react";
 import { RxCross1 } from "react-icons/rx";
-import { Outlet } from "react-router-dom";
-import { FaBars } from "react-icons/fa";
+import { Outlet, useLocation } from "react-router-dom";
+import {
+  FaBars,
+  FaBell,
+  FaSearch,
+  FaUser,
+  FaChevronRight,
+} from "react-icons/fa";
+import { useSelector } from "react-redux";
 
 function AdminLayout() {
   let [sidebarOpen, setSidebarOpen] = useState(false);
+  const location = useLocation();
+  const { user } = useSelector((state) => state.auth);
+
+  // Breadcrumb mapping
+  const breadcrumbMap = {
+    "/admin": "Dashboard",
+    "/admin/orders": "Orders",
+    "/admin/products": "Products",
+    "/admin/categories": "Categories",
+    "/admin/sellers": "Sellers",
+  };
+
+  const currentPage = breadcrumbMap[location.pathname] || "Dashboard";
 
   return (
-    <div>
+    <div className="min-h-screen bg-gray-50">
+      {/* Mobile Sidebar */}
       <Dialog
         open={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
@@ -46,22 +65,88 @@ function AdminLayout() {
         </div>
       </Dialog>
 
+      {/* Desktop Sidebar */}
       <div className="hidden xl:fixed xl:inset-y-0 xl:z-50 xl:flex xl:w-72 xl:flex-col">
         <Sidebar />
       </div>
 
+      {/* Main Content */}
       <div className="xl:pl-72">
-        <button
-          type="button"
-          onClick={() => setSidebarOpen(true)}
-          className="-m-2.5 text-gray-700 xl:hidden p-4"
-        >
-          <span className="sr-only">Open Sidebar</span>
-          <FaBars className="text-slate-800 text-2xl" />
-        </button>
+        {/* Top Navigation Bar */}
+        <div className="sticky top-0 z-40 bg-white border-b border-gray-200 shadow-sm">
+          <div className="flex h-16 items-center gap-x-4 px-4 sm:gap-x-6 sm:px-6 lg:px-8">
+            {/* Mobile Menu Button */}
+            <button
+              type="button"
+              onClick={() => setSidebarOpen(true)}
+              className="-m-2.5 p-2.5 text-gray-700 xl:hidden"
+            >
+              <span className="sr-only">Open Sidebar</span>
+              <FaBars className="text-gray-600 text-xl" />
+            </button>
 
-        <main>
+            {/* Breadcrumb */}
+            <div className="flex items-center gap-2 text-sm">
+              <span className="text-gray-500">Admin</span>
+              <FaChevronRight className="text-gray-400 text-xs" />
+              <span className="text-gray-900 font-semibold">{currentPage}</span>
+            </div>
+
+            {/* Spacer */}
+            <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
+              <div className="flex flex-1"></div>
+
+              {/* Right Section */}
+              <div className="flex items-center gap-x-4 lg:gap-x-6">
+                {/* Search Button */}
+                <button className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
+                  <FaSearch className="text-lg" />
+                </button>
+
+                {/* Notifications */}
+                <button className="relative p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
+                  <FaBell className="text-lg" />
+                  <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                </button>
+
+                {/* Separator */}
+                <div className="hidden lg:block h-6 w-px bg-gray-200" />
+
+                {/* User Menu */}
+                <div className="flex items-center gap-3">
+                  <div className="hidden lg:block text-right">
+                    <p className="text-sm font-semibold text-gray-900">
+                      {user?.username}
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      {user?.roles?.includes("ROLE_ADMIN")
+                        ? "Administrator"
+                        : "Seller"}
+                    </p>
+                  </div>
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold shadow-lg">
+                    {user?.username?.charAt(0).toUpperCase()}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Page Content */}
+        <main className="bg-gray-50 min-h-[calc(100vh-4rem)]">
           <div className="p-4 sm:p-6 xl:p-8">
+            {/* Page Header */}
+            <div className="mb-6">
+              <h1 className="text-3xl font-bold text-gray-900">
+                {currentPage}
+              </h1>
+              <p className="text-gray-600 mt-1">
+                Manage your {currentPage.toLowerCase()} from here
+              </p>
+            </div>
+
+            {/* Outlet */}
             <Outlet />
           </div>
         </main>
