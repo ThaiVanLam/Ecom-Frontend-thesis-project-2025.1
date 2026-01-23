@@ -389,7 +389,7 @@ export const getOrdersForCustomer = (queryString) => async (dispatch) => {
     );
 
     dispatch({
-      type: "GET_ADMIN_ORDERS",
+      type: "GET_CUSTOMER_ORDERS",
       payload: data.content,
       pageNumber: data.pageNumber,
       pageSize: data.pageSize,
@@ -421,6 +421,26 @@ export const updateOrderStatusFromDashboard =
 
       toast.success(data.message || "Order updated successfully");
       await dispatch(getOrdersForDashboard("pageNumber=0", isAdmin));
+    } catch (error) {
+      console.log(error);
+      toast.error(error?.response?.data?.message || "Internal Server Error");
+    } finally {
+      setLoader(false);
+    }
+  };
+
+export const updateOrderStatusFromCustomer =
+  (orderId, orderStatus, toast, setLoader) => async (dispatch, getState) => {
+    try {
+      setLoader(true);
+
+      const { data } = await api.put(
+        `/order-manager/api/order/users/orders/${orderId}/status`,
+        { status: orderStatus },
+      );
+
+      toast.success(data.message || "Order updated successfully");
+      await dispatch(getOrdersForCustomer("pageNumber=0"));
     } catch (error) {
       console.log(error);
       toast.error(error?.response?.data?.message || "Internal Server Error");

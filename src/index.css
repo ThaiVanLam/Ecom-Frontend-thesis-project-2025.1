@@ -49,3 +49,70 @@
     border-color: var(--color-gray-200, currentcolor);
   }
 }
+
+/* Fade in animation for AddressCard and Empty State */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+/* Slow bounce animation for empty state icon */
+@keyframes bounce-slow {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-bounce-slow {
+  animation: bounce-slow 2s ease-in-out infinite;
+}
+
+/* Optional: Fade out animation */
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
+
+.animate-fadeOut {
+  animation: fadeOut 0.3s ease-out;
+}
+
+/* Stagger animation for multiple cards */
+.animate-fadeIn:nth-child(1) {
+  animation-delay: 0s;
+}
+.animate-fadeIn:nth-child(2) {
+  animation-delay: 0.1s;
+}
+.animate-fadeIn:nth-child(3) {
+  animation-delay: 0.2s;
+}
+.animate-fadeIn:nth-child(4) {
+  animation-delay: 0.3s;
+}
+.animate-fadeIn:nth-child(5) {
+  animation-delay: 0.4s;
+}
+.animate-fadeIn:nth-child(6) {
+  animation-delay: 0.5s;
+}

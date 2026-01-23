@@ -2,6 +2,7 @@ import React from "react";
 import { HiMiniShoppingCart } from "react-icons/hi2";
 import OrderTable from "./OrderTable";
 import useCustomerOrderFilter from "../../hooks/useCustomerOrderFilter";
+import { useSelector } from "react-redux";
 
 function CustomerOrders() {
   const { customerOrder, pagination } = useSelector((state) => state.order);

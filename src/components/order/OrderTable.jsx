@@ -10,7 +10,7 @@ import {
 
 import { customerOrderTableColumn } from "../../components/helper/tableColumn";
 import Modal from "../../components/shared/Modal";
-import UpdateOrderForm from "../../components/admin/orders/UpdateOrderForm";
+import UpdateOrderForm from "./UpdateOrderForm";
 
 function OrderTable({ customerOrder, pagination }) {
   const [updateOpenModal, setUpdateOpenModal] = useState(false);
@@ -50,9 +50,6 @@ function OrderTable({ customerOrder, pagination }) {
 
   return (
     <div>
-      <h1 className="text-slate-800 text-3xl text-center font-bold pb-6 uppercase">
-        All Orders
-      </h1>
       <div>
         <DataGrid
           className="w-full"

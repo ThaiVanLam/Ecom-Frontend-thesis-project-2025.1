@@ -22,6 +22,7 @@ import Category from "./components/admin/categories/Category";
 import Orders from "./components/admin/orders/Orders";
 import Profile from "./components/profile/Profile";
 import CustomerOrders from "./components/order/CustomerOrders";
+import PriceRangeFilter from "./components/products/PriceRangeFilter";
 
 function App() {
   return (
@@ -45,6 +46,7 @@ function App() {
           <Route path="/" element={<PrivateRoute publicPage />}>
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/test" element={<PriceRangeFilter />} />
           </Route>
 
           <Route path="/" element={<PrivateRoute adminOnly />}>

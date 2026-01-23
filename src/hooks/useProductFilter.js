@@ -19,6 +19,11 @@ export const useProductFilter = () => {
     const sortOrder = searchParams.get("sortby") || "asc";
     const categoryParams = searchParams.get("category") || null;
     const keyword = searchParams.get("keyword") || null;
+
+    // for range
+    const minPrice = searchParams.get("minPrice") || null;
+    const maxPrice = searchParams.get("maxPrice") || null;
+
     params.set("sortBy", "price");
     params.set("sortOrder", sortOrder);
 
@@ -28,6 +33,15 @@ export const useProductFilter = () => {
 
     if (keyword) {
       params.set("keyword", keyword);
+    }
+
+    // for range
+    if (minPrice) {
+      params.set("minPrice", minPrice);
+    }
+
+    if (maxPrice) {
+      params.set("maxPrice", maxPrice);
     }
 
     const queryString = params.toString();

@@ -440,7 +440,8 @@ export const customerOrderTableColumn = (handleEdit) => [
     headerClassName: "text-black font-semibold text-center",
     cellClassName: "text-slate-700 font-normal",
     sortable: false,
-    width: 250,
+    // width: 250,
+    flex: 1,
     renderHeader: (params) => <span>Action</span>,
     renderCell: (params) => {
       return (
