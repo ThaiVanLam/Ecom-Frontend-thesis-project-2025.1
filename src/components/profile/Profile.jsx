@@ -13,12 +13,12 @@ import {
 import { HiMiniShoppingCart } from "react-icons/hi2";
 import AddressInfoModal from "../checkout/AddressInfoModal";
 import AddAddressForm from "../checkout/AddAddressForm";
-import AddressCard from "../shared/AddressCard";
 import { DeleteModal } from "../checkout/DeleteModal";
 import toast from "react-hot-toast";
 import { deleteUserAddress } from "../../store/action";
 import Skeleton from "../shared/Skeleton";
 import { Link } from "react-router-dom";
+import AddressCard from "../../components/shared/Addresscard";
 
 function Profile() {
   const dispatch = useDispatch();
