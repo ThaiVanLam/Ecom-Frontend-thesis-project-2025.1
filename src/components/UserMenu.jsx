@@ -60,12 +60,16 @@ function UserMenu() {
             <span className="font-bold text-[16px] mt-1">{user?.username}</span>
           </MenuItem>
         </Link>
-        <Link to="/profile/orders">
-          <MenuItem onClick={handleClose} className="flex gap-2">
-            <HiMiniShoppingCart className="text-xl" />
-            <span className="font-semibold">Order</span>
-          </MenuItem>
-        </Link>
+
+        {!isAdmin && !isSeller && (
+          <Link to="/profile/orders">
+            <MenuItem onClick={handleClose} className="flex gap-2">
+              <HiMiniShoppingCart className="text-xl" />
+              <span className="font-semibold">Order</span>
+            </MenuItem>
+          </Link>
+        )}
+
         {(isAdmin || isSeller) && (
           <Link to={isAdmin ? "/admin" : "/admin/orders"}>
             <MenuItem onClick={handleClose} className="flex gap-2">

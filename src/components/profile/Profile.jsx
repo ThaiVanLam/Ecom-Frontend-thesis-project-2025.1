@@ -9,6 +9,7 @@ import {
   FaEdit,
   FaPlus,
   FaShieldAlt,
+  FaCog,
 } from "react-icons/fa";
 import { HiMiniShoppingCart } from "react-icons/hi2";
 import AddressInfoModal from "../checkout/AddressInfoModal";
@@ -29,15 +30,25 @@ function Profile() {
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [selectedAddress, setSelectedAddress] = useState("");
 
+  // Xác định vai trò
+  const isAdmin = user && user?.roles?.includes("ROLE_ADMIN");
+  const isSeller = user && user?.roles?.includes("ROLE_SELLER");
+  const isRegularUser = !isAdmin && !isSeller;
+
+  // Chỉ load addresses nếu là regular user
   useEffect(() => {
-    dispatch(getUserAddresses());
-  }, [dispatch]);
+    if (isRegularUser) {
+      dispatch(getUserAddresses());
+    }
+  }, [dispatch, isRegularUser]);
 
   const [addressValueChange, setAddressValueChange] = useState(address);
 
   useEffect(() => {
-    setAddressValueChange(address);
-  }, [address]);
+    if (isRegularUser) {
+      setAddressValueChange(address);
+    }
+  }, [address, isRegularUser]);
 
   const addNewAddressHandler = () => {
     setSelectedAddress("");
@@ -47,25 +58,13 @@ function Profile() {
   const deleteAddressHandler = async () => {
     try {
       dispatch({ type: "BUTTON_LOADER" });
-
-      // Xóa address từ API
       await api.delete(
         `/user-manager/api/addresses/${selectedAddress?.addressId}`,
       );
-
-      // ✅ Fetch lại danh sách addresses - React sẽ tự động re-render
-      // Nếu addresses = [] thì sẽ hiển thị empty state
       dispatch(getUserAddresses());
-
-      // Đóng modal
       setOpenDeleteModal(false);
-
-      // Clear selected address
       setSelectedAddress("");
-
-      // Hiển thị thông báo
       toast.success("Address deleted successfully");
-
       dispatch({ type: "IS_SUCCESS" });
     } catch (error) {
       console.error("Delete error:", error);
@@ -93,13 +92,18 @@ function Profile() {
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-gray-900 mb-2">My Profile</h1>
           <p className="text-gray-600">
-            Manage your account information and addresses
+            Manage your account information
+            {isRegularUser && " and addresses"}
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div
+          className={`grid grid-cols-1 ${
+            isRegularUser ? "lg:grid-cols-3" : "lg:grid-cols-1"
+          } gap-6`}
+        >
           {/* User Info Card */}
-          <div className="lg:col-span-1">
+          <div className={isRegularUser ? "lg:col-span-1" : "max-w-md mx-auto"}>
             <div className="bg-white rounded-2xl shadow-lg overflow-hidden transform transition-all duration-300 hover:shadow-xl">
               {/* Card Header with Gradient */}
               <div className="bg-gradient-to-r from-indigo-500 to-purple-600 px-6 py-8 text-white">
@@ -139,124 +143,158 @@ function Profile() {
                   </div>
                 </div>
 
-                {/* Quick Actions */}
-                <div className="pt-4 border-t border-gray-200">
-                  <h3 className="text-sm font-semibold text-gray-700 mb-3">
-                    Quick Actions
-                  </h3>
-                  <div className="space-y-2">
-                    <Link
-                      to="/profile/orders"
-                      className="flex items-center justify-between p-3 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition-colors duration-200 cursor-pointer"
-                    >
-                      <div className="flex items-center gap-3">
-                        <HiMiniShoppingCart className="text-xl text-indigo-600" />
-                        <span className="text-gray-700 font-medium">
-                          My Orders
-                        </span>
-                      </div>
-                      <span className="text-indigo-600">→</span>
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Addresses Section */}
-          <div className="lg:col-span-2">
-            <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-              {/* Addresses Header */}
-              <div className="bg-gradient-to-r from-blue-500 to-cyan-600 px-6 py-6">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3 text-white">
-                    <FaMapMarkerAlt className="text-2xl" />
-                    <h2 className="text-2xl font-bold">Saved Addresses</h2>
-                  </div>
-                  <button
-                    onClick={addNewAddressHandler}
-                    className="flex items-center gap-2 bg-white text-blue-600 px-4 py-2 rounded-lg font-semibold hover:bg-blue-50 transition-colors duration-200 shadow-md"
-                  >
-                    <FaPlus />
-                    Add New
-                  </button>
-                </div>
-                <p className="text-blue-100 mt-2">
-                  Manage your delivery addresses
-                </p>
-              </div>
-
-              {/* Addresses Body */}
-              <div className="p-6">
-                {isLoading ? (
-                  <div className="space-y-4">
-                    <Skeleton />
-                  </div>
-                ) : !addressValueChange || addressValueChange.length === 0 ? (
-                  <div className="text-center py-12 animate-fadeIn">
-                    <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-blue-100 to-cyan-100 rounded-full mb-6 animate-bounce-slow">
-                      <FaMapMarkerAlt className="text-5xl text-blue-500" />
-                    </div>
-                    <h3 className="text-2xl font-bold text-gray-800 mb-2">
-                      No Addresses Added
+                {/* Quick Actions - chỉ hiện cho Regular User */}
+                {isRegularUser && (
+                  <div className="pt-4 border-t border-gray-200">
+                    <h3 className="text-sm font-semibold text-gray-700 mb-3">
+                      Quick Actions
                     </h3>
-                    <p className="text-gray-500 mb-8 max-w-md mx-auto">
-                      Add your first delivery address to get started with
-                      seamless ordering
-                    </p>
-                    <button
-                      onClick={addNewAddressHandler}
-                      className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500 to-cyan-600 text-white px-8 py-3 rounded-lg font-semibold hover:from-blue-600 hover:to-cyan-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
-                    >
-                      <FaPlus />
-                      Add Your First Address
-                    </button>
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {address.map((addr, index) => (
-                        <div
-                          key={addr.addressId}
-                          style={{ animationDelay: `${index * 0.1}s` }}
-                        >
-                          <AddressCard
-                            address={addr}
-                            onEdit={() => {
-                              setSelectedAddress(addr);
-                              setOpenAddressModal(true);
-                            }}
-                            onDelete={() => {
-                              setSelectedAddress(addr);
-                              setOpenDeleteModal(true);
-                            }}
-                          />
+                    <div className="space-y-2">
+                      <Link
+                        to="/profile/orders"
+                        className="flex items-center justify-between p-3 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition-colors duration-200 cursor-pointer"
+                      >
+                        <div className="flex items-center gap-3">
+                          <HiMiniShoppingCart className="text-xl text-indigo-600" />
+                          <span className="text-gray-700 font-medium">
+                            My Orders
+                          </span>
                         </div>
-                      ))}
+                        <span className="text-indigo-600">→</span>
+                      </Link>
+                    </div>
+                  </div>
+                )}
+
+                {/* Admin/Seller Quick Actions */}
+                {(isAdmin || isSeller) && (
+                  <div className="pt-4 border-t border-gray-200">
+                    <h3 className="text-sm font-semibold text-gray-700 mb-3">
+                      Quick Actions
+                    </h3>
+                    <div className="space-y-2">
+                      <Link
+                        to={isAdmin ? "/admin" : "/admin/orders"}
+                        className="flex items-center justify-between p-3 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition-colors duration-200 cursor-pointer"
+                      >
+                        <div className="flex items-center gap-3">
+                          <FaCog className="text-xl text-indigo-600" />
+                          <span className="text-gray-700 font-medium">
+                            {isAdmin ? "Admin Panel" : "Seller Panel"}
+                          </span>
+                        </div>
+                        <span className="text-indigo-600">→</span>
+                      </Link>
                     </div>
                   </div>
                 )}
               </div>
             </div>
           </div>
+
+          {/* Addresses Section - chỉ hiện cho Regular User */}
+          {isRegularUser && (
+            <div className="lg:col-span-2">
+              <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+                {/* Addresses Header */}
+                <div className="bg-gradient-to-r from-blue-500 to-cyan-600 px-6 py-6">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3 text-white">
+                      <FaMapMarkerAlt className="text-2xl" />
+                      <h2 className="text-2xl font-bold">Saved Addresses</h2>
+                    </div>
+                    <button
+                      onClick={addNewAddressHandler}
+                      className="flex items-center gap-2 bg-white text-blue-600 px-4 py-2 rounded-lg font-semibold hover:bg-blue-50 transition-colors duration-200 shadow-md"
+                    >
+                      <FaPlus />
+                      Add New
+                    </button>
+                  </div>
+                  <p className="text-blue-100 mt-2">
+                    Manage your delivery addresses
+                  </p>
+                </div>
+
+                {/* Addresses Body */}
+                <div className="p-6">
+                  {isLoading ? (
+                    <div className="space-y-4">
+                      <Skeleton />
+                    </div>
+                  ) : !addressValueChange || addressValueChange.length === 0 ? (
+                    <div className="text-center py-12 animate-fadeIn">
+                      <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-blue-100 to-cyan-100 rounded-full mb-6 animate-bounce-slow">
+                        <FaMapMarkerAlt className="text-5xl text-blue-500" />
+                      </div>
+                      <h3 className="text-2xl font-bold text-gray-800 mb-2">
+                        No Addresses Added
+                      </h3>
+                      <p className="text-gray-500 mb-8 max-w-md mx-auto">
+                        Add your first delivery address to get started with
+                        seamless ordering
+                      </p>
+                      <button
+                        onClick={addNewAddressHandler}
+                        className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500 to-cyan-600 text-white px-8 py-3 rounded-lg font-semibold hover:from-blue-600 hover:to-cyan-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+                      >
+                        <FaPlus />
+                        Add Your First Address
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {address.map((addr, index) => (
+                          <div
+                            key={addr.addressId}
+                            style={{ animationDelay: `${index * 0.1}s` }}
+                          >
+                            <AddressCard
+                              address={addr}
+                              onEdit={() => {
+                                setSelectedAddress(addr);
+                                setOpenAddressModal(true);
+                              }}
+                              onDelete={() => {
+                                setSelectedAddress(addr);
+                                setOpenDeleteModal(true);
+                              }}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Modals */}
-      <AddressInfoModal open={openAddressModal} setOpen={setOpenAddressModal}>
-        <AddAddressForm
-          address={selectedAddress}
-          setOpenAddressModal={setOpenAddressModal}
-        />
-      </AddressInfoModal>
+      {/* Modals - chỉ hiện cho Regular User */}
+      {isRegularUser && (
+        <>
+          <AddressInfoModal
+            open={openAddressModal}
+            setOpen={setOpenAddressModal}
+          >
+            <AddAddressForm
+              address={selectedAddress}
+              setOpenAddressModal={setOpenAddressModal}
+            />
+          </AddressInfoModal>
 
-      <DeleteModal
-        open={openDeleteModal}
-        loader={btnLoader}
-        setOpen={setOpenDeleteModal}
-        title="Delete Address"
-        onDeleteHandler={deleteAddressHandler}
-      />
+          <DeleteModal
+            open={openDeleteModal}
+            loader={btnLoader}
+            setOpen={setOpenDeleteModal}
+            title="Delete Address"
+            onDeleteHandler={deleteAddressHandler}
+          />
+        </>
+      )}
     </div>
   );
 }
