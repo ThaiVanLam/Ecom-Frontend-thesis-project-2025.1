@@ -31,8 +31,8 @@ function ItemContent({
         cartItems,
         toast,
         currentQuantity,
-        setCurrentQuantity
-      )
+        setCurrentQuantity,
+      ),
     );
   };
 
@@ -48,25 +48,91 @@ function ItemContent({
     dispatch(removeFromCart(cartItems, toast));
   };
 
-  return (
-    <div className="grid md:grid-cols-5 grid-cols-4 md:text-md text-sm gap-4 items-center  border-[1px] border-slate-200  rounded-md  lg:px-4  py-4 p-2">
-      <div className="md:col-span-2 justify-self-start flex  flex-col gap-2 ">
-        <div className="flex md:flex-row flex-col lg:gap-4 sm:gap-3 gap-0 items-start ">
-          <h3 className="lg:text-[17px] text-sm font-semibold text-slate-600">
-            {truncateText(productName)}
-          </h3>
-        </div>
-        <div className="md:w-36 sm:w-24 w-12">
-          <img
-            src={image}
-            alt={productName}
-            className="md:h-36 sm:h-24 h-12 w-full object-cover rounded-md"
-          />
+  const itemTotal = Number(currentQuantity) * Number(specialPrice);
+  const itemSavings =
+    (Number(price) - Number(specialPrice)) * Number(currentQuantity);
 
-          <div className="flex items-start gap-5 mt-3">
+  return (
+    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow duration-300">
+      <div className="grid md:grid-cols-12 gap-4 items-center">
+        {/* Product Info - Col 5 */}
+        <div className="md:col-span-5 flex gap-4">
+          {/* Image */}
+          <div className="flex-shrink-0 w-24 h-24 md:w-28 md:h-28 bg-gray-50 rounded-lg overflow-hidden">
+            <img
+              src={image}
+              alt={productName}
+              className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
+            />
+          </div>
+
+          {/* Product Details */}
+          <div className="flex flex-col justify-between flex-1">
+            <div>
+              <h3 className="font-bold text-gray-900 text-base md:text-lg mb-1 line-clamp-2">
+                {productName}
+              </h3>
+              <p className="text-gray-600 text-xs md:text-sm line-clamp-2">
+                {truncateText(description, 60)}
+              </p>
+            </div>
+
+            {/* Mobile Price & Remove */}
+            <div className="md:hidden flex items-center justify-between mt-3">
+              <div className="flex flex-col">
+                <span className="font-bold text-blue-600 text-lg">
+                  {formatPrice(specialPrice)}
+                </span>
+                {discount > 0 && (
+                  <span className="text-gray-400 text-sm line-through">
+                    {formatPrice(price)}
+                  </span>
+                )}
+              </div>
+              <button
+                onClick={() => {
+                  removeItemFromCart({
+                    image,
+                    productName,
+                    description,
+                    specialPrice,
+                    price,
+                    productId,
+                    quantity,
+                  });
+                }}
+                className="p-2 text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
+              >
+                <FaTrash size={16} />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Price - Desktop Only - Col 2 */}
+        <div className="hidden md:flex md:col-span-2 flex-col items-center">
+          <span className="font-bold text-blue-600 text-lg">
+            {formatPrice(specialPrice)}
+          </span>
+          {discount > 0 && (
+            <span className="text-gray-400 text-sm line-through">
+              {formatPrice(price)}
+            </span>
+          )}
+          {discount > 0 && (
+            <span className="text-green-600 text-xs font-semibold mt-1">
+              Save {discount}%
+            </span>
+          )}
+        </div>
+
+        {/* Quantity - Col 3 */}
+        <div className="md:col-span-3 flex justify-center">
+          <div className="flex items-center gap-3 bg-gray-50 rounded-lg p-2">
             <button
+              disabled={currentQuantity <= 1}
               onClick={() => {
-                removeItemFromCart({
+                handleQtyDecrease({
                   image,
                   productName,
                   description,
@@ -76,50 +142,81 @@ function ItemContent({
                   quantity,
                 });
               }}
-              className="flex items-center font-semibold space-x-2 px-4 py-1 text-xs border border-rose-600 text-rose-600 rounded-md hover:bg-red-50 transition-colors duration-200"
+              className={`w-8 h-8 rounded-lg font-bold transition-colors ${
+                currentQuantity <= 1
+                  ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                  : "bg-blue-600 text-white hover:bg-blue-700"
+              }`}
             >
-              <FaTrash size={16} className="text-rose-600" />
-              remove
+              −
+            </button>
+
+            <span className="font-semibold text-gray-900 min-w-[2rem] text-center">
+              {currentQuantity}
+            </span>
+
+            <button
+              onClick={() => {
+                handleQtyIncrease({
+                  image,
+                  productName,
+                  description,
+                  specialPrice,
+                  price,
+                  productId,
+                  quantity,
+                });
+              }}
+              className="w-8 h-8 rounded-lg bg-blue-600 text-white font-bold hover:bg-blue-700 transition-colors"
+            >
+              +
             </button>
           </div>
         </div>
-      </div>
 
-      <div className="justify-self-center lg:text-[17px] text-sm text-slate-600 font-semibold">
-        {formatPrice(Number(specialPrice))}
-      </div>
+        {/* Total - Desktop Only - Col 2 */}
+        <div className="hidden md:flex md:col-span-2 flex-col items-center">
+          <span className="font-bold text-gray-900 text-lg">
+            {formatPrice(itemTotal)}
+          </span>
+          {itemSavings > 0 && (
+            <span className="text-green-600 text-xs font-semibold">
+              Saved {formatPrice(itemSavings)}
+            </span>
+          )}
+          <button
+            onClick={() => {
+              removeItemFromCart({
+                image,
+                productName,
+                description,
+                specialPrice,
+                price,
+                productId,
+                quantity,
+              });
+            }}
+            className="mt-2 flex items-center gap-2 text-rose-600 hover:text-rose-700 text-sm font-medium transition-colors"
+          >
+            <FaTrash size={14} />
+            Remove
+          </button>
+        </div>
 
-      <div className="justify-self-center">
-        <SetQuantity
-          quantity={currentQuantity}
-          cardCounter={true}
-          handleQtyIncrease={() => {
-            handleQtyIncrease({
-              image,
-              productName,
-              description,
-              specialPrice,
-              price,
-              productId,
-              quantity,
-            });
-          }}
-          handleQtyDecrease={() => {
-            handleQtyDecrease({
-              image,
-              productName,
-              description,
-              specialPrice,
-              price,
-              productId,
-              quantity,
-            });
-          }}
-        />
-      </div>
-
-      <div className="justify-self-center lg:text-[17px] text-sm text-slate-600 font-semibold">
-        {formatPrice(Number(currentQuantity) * Number(specialPrice))}
+        {/* Mobile Total */}
+        <div className="md:hidden col-span-full flex items-center justify-between pt-3 border-t border-gray-100">
+          <span className="text-gray-600 font-medium">Item Total:</span>
+          <div className="text-right">
+            <span className="font-bold text-gray-900 text-lg">
+              {formatPrice(itemTotal)}
+            </span>
+            {itemSavings > 0 && (
+              <p className="text-green-600 text-xs font-semibold">
+                Saved {formatPrice(itemSavings)}
+              </p>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );
