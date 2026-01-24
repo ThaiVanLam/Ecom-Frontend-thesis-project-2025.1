@@ -14,6 +14,7 @@ import {
   FaCheckCircle,
   FaGift,
   FaTruck,
+  FaUserShield,
 } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
@@ -25,6 +26,7 @@ function Register() {
   const dispatch = useDispatch();
   const [loader, setLoader] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [selectedRole, setSelectedRole] = useState("user"); // Default role
 
   const {
     register,
@@ -34,7 +36,15 @@ function Register() {
   } = useForm({ mode: "onTouched" });
 
   const registerHandler = async (data) => {
-    dispatch(registerNewUser(data, toast, reset, navigate, setLoader));
+    // Prepare data with selected role
+    const registrationData = {
+      ...data,
+      roles: [selectedRole], // Send as array
+    };
+
+    dispatch(
+      registerNewUser(registrationData, toast, reset, navigate, setLoader),
+    );
   };
 
   const benefits = [
@@ -65,8 +75,32 @@ function Register() {
     "Get personalized recommendations",
   ];
 
+  const roleOptions = [
+    {
+      value: "user",
+      label: "Customer",
+      icon: FaUser,
+      description: "Shop and buy products",
+      color: "from-blue-500 to-cyan-500",
+    },
+    {
+      value: "seller",
+      label: "Seller",
+      icon: FaUserShield,
+      description: "Manage and sell products",
+      color: "from-purple-500 to-pink-500",
+    },
+    {
+      value: "admin",
+      label: "Administrator",
+      icon: FaShieldAlt,
+      description: "Full system access",
+      color: "from-orange-500 to-red-500",
+    },
+  ];
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-indigo-50 to-purple-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 left-0 w-96 h-96 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
@@ -185,6 +219,56 @@ function Register() {
               onSubmit={handleSubmit(registerHandler)}
               className="space-y-6"
             >
+              {/* Role Selection */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-3">
+                  Select Account Type
+                </label>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  {roleOptions.map((role) => {
+                    const RoleIcon = role.icon;
+                    return (
+                      <button
+                        key={role.value}
+                        type="button"
+                        onClick={() => setSelectedRole(role.value)}
+                        className={`p-4 rounded-xl border-2 transition-all duration-300 transform hover:scale-105 ${
+                          selectedRole === role.value
+                            ? `border-blue-500 bg-gradient-to-br ${role.color} text-white shadow-lg`
+                            : "border-gray-200 bg-white hover:border-blue-300"
+                        }`}
+                      >
+                        <RoleIcon
+                          className={`text-2xl mx-auto mb-2 ${
+                            selectedRole === role.value
+                              ? "text-white"
+                              : "text-gray-600"
+                          }`}
+                        />
+                        <p
+                          className={`font-semibold text-sm ${
+                            selectedRole === role.value
+                              ? "text-white"
+                              : "text-gray-900"
+                          }`}
+                        >
+                          {role.label}
+                        </p>
+                        <p
+                          className={`text-xs mt-1 ${
+                            selectedRole === role.value
+                              ? "text-white"
+                              : "text-gray-500"
+                          }`}
+                        >
+                          {role.description}
+                        </p>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
               {/* Username Field */}
               <div className="relative">
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
