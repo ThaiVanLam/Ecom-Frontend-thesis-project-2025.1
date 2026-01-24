@@ -1,4 +1,4 @@
-import { FaAddressBook } from "react-icons/fa";
+import { FaAddressBook, FaPlus } from "react-icons/fa";
 import Skeleton from "../../components/shared/Skeleton";
 import React, { useState } from "react";
 import AddressInfoModal from "./AddressInfoModal";
@@ -22,62 +22,77 @@ function AddressInfo({ address }) {
 
   const deleteAddressHandler = () => {
     dispatch(
-      deleteUserAddress(toast, selectedAddress?.addressId, setOpenDeleteModal)
+      deleteUserAddress(toast, selectedAddress?.addressId, setOpenDeleteModal),
     );
   };
 
   const noAddressExist = !address || address.length === 0;
 
   const { isLoading, btnLoader } = useSelector((state) => state.errors);
+
   return (
-    <div className="pt-4">
+    <div className="min-h-[500px]">
       {noAddressExist ? (
-        <div className="p-6 rounded-lg max-w-md mx-auto flex flex-col items-center justify-center">
-          <FaAddressBook size={50} className="text-gray-500 mb-4" />
-          <h1 className="text-slate-900 text-center font-semibold text-2xl mb-2">
-            No Address Added Yet
-          </h1>
-          <p className="text-slate-800 text-center mb-6">
-            Please add your address to complete purchase
+        /* Empty State */
+        <div className="flex flex-col items-center justify-center py-16 animate-fadeIn">
+          <div className="relative mb-8">
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full blur-2xl opacity-20 animate-pulse"></div>
+            <div className="relative bg-white rounded-full p-12 shadow-2xl border-4 border-gray-100">
+              <FaAddressBook className="text-gray-400 text-7xl" />
+            </div>
+          </div>
+
+          <h2 className="text-3xl font-bold text-gray-900 mb-3">
+            No Delivery Address
+          </h2>
+          <p className="text-gray-600 text-lg mb-8 text-center max-w-md">
+            Add your delivery address to continue with your order
           </p>
+
           <button
-            className="px-4 py-2 bg-blue-600 text-white font-medium rounded hover:bg-blue-700 transition-all"
             onClick={addNewAddressHandler}
+            className="group flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
           >
-            Add Address
+            <FaPlus className="text-xl group-hover:rotate-90 transition-transform duration-300" />
+            Add Delivery Address
           </button>
         </div>
       ) : (
-        <div className="relative p-6 rounded-lg max-w-md mx-auto mb-14">
-          <h1 className="text-slate-800 text-center font-bold text-2xl">
-            Select Address
-          </h1>
+        /* Address List */
+        <div className="animate-fadeIn">
+          <div className="flex items-center justify-between mb-8">
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
+                <FaAddressBook className="text-blue-600" />
+                Select Delivery Address
+              </h2>
+              <p className="text-gray-600 mt-1">
+                Choose where you want your order delivered
+              </p>
+            </div>
+
+            <button
+              onClick={addNewAddressHandler}
+              className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300"
+            >
+              <FaPlus />
+              Add New
+            </button>
+          </div>
+
           {isLoading ? (
-            <div className="py-4 px-8">
+            <div className="space-y-4">
               <Skeleton />
             </div>
           ) : (
-            <>
-              <div className="space-y-4 pt-6">
-                <AddressList
-                  addresses={address}
-                  setSelectedAddress={setSelectedAddress}
-                  setOpenAddressModal={setOpenAddressModal}
-                  setOpenDeleteModal={setOpenDeleteModal}
-                />
-              </div>
-
-              {address.length > 0 && (
-                <div className="mt-4">
-                  <button
-                    className="px-4 py-2 bg-blue-600 text-white font-medium rounded hover:bg-blue-700 transition-all"
-                    onClick={addNewAddressHandler}
-                  >
-                    Add More
-                  </button>
-                </div>
-              )}
-            </>
+            <div className="space-y-4">
+              <AddressList
+                addresses={address}
+                setSelectedAddress={setSelectedAddress}
+                setOpenAddressModal={setOpenAddressModal}
+                setOpenDeleteModal={setOpenDeleteModal}
+              />
+            </div>
           )}
         </div>
       )}
