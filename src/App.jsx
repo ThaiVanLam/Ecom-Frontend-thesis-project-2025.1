@@ -29,6 +29,7 @@ import Orders from "./components/admin/orders/Orders";
 import Profile from "./components/profile/Profile";
 import CustomerOrders from "./components/order/CustomerOrders";
 import PriceRangeFilter from "./components/products/PriceRangeFilter";
+import Customers from "./components/admin/customers/Customers";
 
 // Component wrapper để kiểm tra route
 function ConditionalNavbar() {
@@ -75,6 +76,7 @@ function App() {
               <Route path="sellers" element={<Sellers />} />
               <Route path="orders" element={<Orders />} />
               <Route path="categories" element={<Category />} />
+              <Route path="customers" element={<Customers />} />
             </Route>
           </Route>
         </Routes>

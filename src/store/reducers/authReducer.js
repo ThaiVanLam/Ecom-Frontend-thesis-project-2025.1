@@ -4,6 +4,7 @@ const initialState = {
   clientSecret: null,
   selectedUserCheckoutAddress: null,
   sellers: null,
+  customers: null,
   pagination: {},
 };
 
@@ -31,6 +32,19 @@ export const authReducer = (state = initialState, action) => {
       return {
         ...state,
         sellers: action.payload,
+        pagination: {
+          ...state.pagination,
+          pageNumber: action.pageNumber,
+          pageSize: action.pageSize,
+          totalElements: action.totalElements,
+          totalPages: action.totalPages,
+          lastPage: action.lastPage,
+        },
+      };
+    case "FETCH_CUSTOMERS": // ADD THIS
+      return {
+        ...state,
+        customers: action.payload,
         pagination: {
           ...state.pagination,
           pageNumber: action.pageNumber,

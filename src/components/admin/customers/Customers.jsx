@@ -1,26 +1,23 @@
 import { DataGrid } from "@mui/x-data-grid";
 import React, { useState } from "react";
-import { MdPersonAdd } from "react-icons/md";
-import AddSellerForm from "./AddSellerForm";
-import { adminSellerTableColumn } from "../../../components/helper/tableColumn";
+import { FaUserFriends } from "react-icons/fa";
+import { adminCustomerTableColumn } from "../../../components/helper/tableColumn";
 import { useSelector } from "react-redux";
-import { useDashboardSellerFilter } from "../../../hooks/useSellerFilter";
-import Modal from "../../../components/shared/Modal";
+import { useDashboardCustomerFilter } from "../../../hooks/useCustomerFilter";
 import Loader from "../../../components/shared/Loader";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { DeleteModal } from "../../../components/checkout/DeleteModal";
 import { useDispatch } from "react-redux";
-import { deleteSeller } from "../../../store/action";
+import { deleteCustomer } from "../../../store/action";
 import toast from "react-hot-toast";
 
-function Sellers() {
-  const { sellers, pagination } = useSelector((state) => state.auth);
+function Customers() {
+  const { customers, pagination } = useSelector((state) => state.auth);
   const { isLoading, errorMessage } = useSelector((state) => state.errors);
-  const [openAddModal, setOpenAddModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
-  const [selectedSeller, setSelectedSeller] = useState("");
+  const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [loader, setLoader] = useState(false);
-  const emptySeller = !sellers || sellers?.length === 0;
+  const emptyCustomer = !customers || customers?.length === 0;
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -32,7 +29,7 @@ function Sellers() {
     pagination?.pageNumber + 1 || 1,
   );
 
-  const tableRecords = sellers?.map((item) => {
+  const tableRecords = customers?.map((item) => {
     return {
       id: item.userId,
       username: item.username,
@@ -40,7 +37,7 @@ function Sellers() {
     };
   });
 
-  useDashboardSellerFilter();
+  useDashboardCustomerFilter();
 
   const handlePaginationChange = (paginationModel) => {
     const page = paginationModel.page + 1;
@@ -49,47 +46,44 @@ function Sellers() {
     navigate(`${pathname}?${params}`);
   };
 
-  const handleDelete = (seller) => {
-    setSelectedSeller(seller);
+  const handleDelete = (customer) => {
+    setSelectedCustomer(customer);
     setOpenDeleteModal(true);
   };
 
-  const deleteSellerHandler = () => {
+  const deleteCustomerHandler = () => {
     dispatch(
-      deleteSeller(setLoader, selectedSeller?.id, toast, setOpenDeleteModal),
+      deleteCustomer(
+        setLoader,
+        selectedCustomer?.id,
+        toast,
+        setOpenDeleteModal,
+      ),
     );
   };
 
   return (
     <div>
-      <div className="pt-6 pb-10 flex justify-end">
-        <button
-          onClick={() => setOpenAddModal(true)}
-          className="bg-custom-blue hover:bg-blue-800 text-white font-semibold py-2 px-4 flex items-center gap-2 rounded-md shadow-md transition-colors hover:text-slate-300 duration-300"
-        >
-          <MdPersonAdd className="text-xl" />
-          Add Seller
-        </button>
-      </div>
-      {!emptySeller && (
+      {!emptyCustomer && (
         <h1 className="text-slate-800 text-3xl text-center font-bold pb-6 uppercase">
-          All Sellers
+          All Customers
         </h1>
       )}
       {isLoading ? (
         <Loader />
       ) : (
         <>
-          {emptySeller ? (
+          {emptyCustomer ? (
             <div className="flex flex-col items-center justify-center text-gray-600 py-10">
-              <h2 className="text-2xl font-semibold">No Sellers Created Yet</h2>
+              <FaUserFriends size={50} className="mb-3" />
+              <h2 className="text-2xl font-semibold">No Customers Yet</h2>
             </div>
           ) : (
             <div className="max-w-full">
               <DataGrid
                 className="w-full"
                 rows={tableRecords}
-                columns={adminSellerTableColumn(handleDelete)}
+                columns={adminCustomerTableColumn(handleDelete)}
                 paginationMode="server"
                 rowCount={pagination?.totalElements || 0}
                 initialState={{
@@ -116,23 +110,15 @@ function Sellers() {
         </>
       )}
 
-      <Modal
-        open={openAddModal}
-        setOpen={setOpenAddModal}
-        title="Add New Seller"
-      >
-        <AddSellerForm setOpen={setOpenAddModal} seller={selectedSeller} />
-      </Modal>
-
       <DeleteModal
         open={openDeleteModal}
         setOpen={setOpenDeleteModal}
         loader={loader}
-        title="Delete Seller"
-        onDeleteHandler={deleteSellerHandler}
+        title="Delete Customer"
+        onDeleteHandler={deleteCustomerHandler}
       />
     </div>
   );
 }
 
-export default Sellers;
+export default Customers;

@@ -429,6 +429,62 @@ export const updateOrderStatusFromDashboard =
     }
   };
 
+export const dashboardCustomersAction = (queryString) => async (dispatch) => {
+  try {
+    dispatch({ type: "IS_FETCHING" });
+    const { data } = await api.get(
+      `/user-manager/api/auth/customers?${queryString}`,
+    );
+
+    dispatch({
+      type: "FETCH_CUSTOMERS",
+      payload: data.content,
+      pageNumber: data.pageNumber,
+      pageSize: data.pageSize,
+      totalElements: data.totalElements,
+      totalPages: data.totalPages,
+      lastPage: data.lastPage,
+    });
+    dispatch({ type: "IS_SUCCESS" });
+  } catch (error) {
+    dispatch({
+      type: "IS_ERROR",
+      payload:
+        error?.response?.data?.message || "Failed to fetch dashboard customers",
+    });
+  }
+};
+
+export const deleteCustomer =
+  (setLoader, customerId, toast, setOpenDeleteModal) =>
+  async (dispatch, getState) => {
+    try {
+      setLoader(true);
+      await api.delete(`/user-manager/api/auth/customers/${customerId}`);
+      toast.success("Customer deleted successfully");
+      setLoader(false);
+      setOpenDeleteModal(false);
+      await dispatch(dashboardCustomersAction("pageNumber=0"));
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Some Error Occured");
+    }
+  };
+
+export const deleteSeller =
+  (setLoader, sellerId, toast, setOpenDeleteModal) =>
+  async (dispatch, getState) => {
+    try {
+      setLoader(true);
+      await api.delete(`/user-manager/api/auth/sellers/${sellerId}`);
+      toast.success("Seller deleted successfully");
+      setLoader(false);
+      setOpenDeleteModal(false);
+      await dispatch(dashboardSellersAction("pageNumber=0"));
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Some Error Occured");
+    }
+  };
+
 export const updateOrderStatusFromCustomer =
   (orderId, orderStatus, toast, setLoader) => async (dispatch, getState) => {
     try {

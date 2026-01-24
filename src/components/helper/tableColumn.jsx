@@ -307,13 +307,12 @@ export const adminCategoryTableColumn = (handleEdit, handleDelete) => [
   },
 ];
 
-export const adminSellerTableColumn = () => [
+export const adminSellerTableColumn = (handleDelete) => [
   {
     disableColumnMenu: true,
     sortable: false,
     field: "id",
     headerName: "ID",
-    // minWidth: 200,
     flex: 1,
     headerAlign: "center",
     align: "center",
@@ -327,7 +326,6 @@ export const adminSellerTableColumn = () => [
     field: "username",
     headerName: "Username Name",
     align: "center",
-    // width: 260,
     flex: 1,
     editable: false,
     sortable: false,
@@ -341,7 +339,6 @@ export const adminSellerTableColumn = () => [
     field: "email",
     headerName: "Email",
     align: "center",
-    // width: 260,
     flex: 1,
     editable: false,
     sortable: false,
@@ -356,6 +353,106 @@ export const adminSellerTableColumn = () => [
             <MdOutlineEmail className="text-slate-700 text-lg" />
           </span>
           <span>{params?.row?.email}</span>
+        </div>
+      );
+    },
+  },
+  {
+    field: "action",
+    headerName: "Action",
+    headerAlign: "center",
+    editable: false,
+    headerClassName: "text-black font-semibold text-center",
+    cellClassName: "text-slate-700 font-normal",
+    sortable: false,
+    flex: 1,
+    renderHeader: (params) => <span>Action</span>,
+    renderCell: (params) => {
+      return (
+        <div className="flex justify-center items-center space-x-2 h-full pt-2">
+          <button
+            onClick={() => handleDelete(params.row)}
+            className="flex items-center bg-red-500 text-white px-4 h-9 rounded-md"
+          >
+            <FaTrashAlt className="mr-2" />
+            Delete
+          </button>
+        </div>
+      );
+    },
+  },
+];
+
+export const adminCustomerTableColumn = (handleDelete) => [
+  {
+    disableColumnMenu: true,
+    sortable: false,
+    field: "id",
+    headerName: "ID",
+    flex: 1,
+    headerAlign: "center",
+    align: "center",
+    editable: false,
+    headerClassName: "text-black font-semibold border",
+    cellClassName: "text-slate-700 font-normal border",
+    renderHeader: (params) => <span className="text-center">CustomerID</span>,
+  },
+  {
+    disableColumnMenu: true,
+    field: "username",
+    headerName: "Username Name",
+    align: "center",
+    flex: 1,
+    editable: false,
+    sortable: false,
+    headerAlign: "center",
+    headerClassName: "text-black font-semibold text-center border ",
+    cellClassName: "text-slate-700 font-normal border text-center",
+    renderHeader: (params) => <span>Username</span>,
+  },
+  {
+    disableColumnMenu: true,
+    field: "email",
+    headerName: "Email",
+    align: "center",
+    flex: 1,
+    editable: false,
+    sortable: false,
+    headerAlign: "center",
+    headerClassName: "text-black font-semibold text-center border ",
+    cellClassName: "text-slate-700 font-normal border text-center",
+    renderHeader: (params) => <span>Email</span>,
+    renderCell: (params) => {
+      return (
+        <div className="flex items-center justify-center gap-1">
+          <span>
+            <MdOutlineEmail className="text-slate-700 text-lg" />
+          </span>
+          <span>{params?.row?.email}</span>
+        </div>
+      );
+    },
+  },
+  {
+    field: "action",
+    headerName: "Action",
+    headerAlign: "center",
+    editable: false,
+    headerClassName: "text-black font-semibold text-center",
+    cellClassName: "text-slate-700 font-normal",
+    sortable: false,
+    flex: 1,
+    renderHeader: (params) => <span>Action</span>,
+    renderCell: (params) => {
+      return (
+        <div className="flex justify-center items-center space-x-2 h-full pt-2">
+          <button
+            onClick={() => handleDelete(params.row)}
+            className="flex items-center bg-red-500 text-white px-4 h-9 rounded-md"
+          >
+            <FaTrashAlt className="mr-2" />
+            Delete
+          </button>
         </div>
       );
     },
