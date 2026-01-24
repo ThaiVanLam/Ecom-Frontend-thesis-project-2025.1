@@ -1,5 +1,6 @@
+// src/components/shared/Sidebar.jsx
 import React from "react";
-import { FaTachometerAlt, FaChevronRight } from "react-icons/fa";
+import { FaTachometerAlt, FaChevronRight, FaStore } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import { adminNavigation, sellerNavigation } from "../../utils";
@@ -101,6 +102,17 @@ function Sidebar({ isProfileLayout = false }) {
                 </div>
               </div>
             </div>
+          </li>
+
+          {/* Back to Store Button */}
+          <li>
+            <Link
+              to="/"
+              className="group flex items-center justify-center gap-x-3 rounded-xl p-4 text-sm font-semibold leading-6 bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:from-blue-600 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+            >
+              <FaStore className="text-xl" />
+              <span>Back to Store</span>
+            </Link>
           </li>
         </ul>
       </nav>

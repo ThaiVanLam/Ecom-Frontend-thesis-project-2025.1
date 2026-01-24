@@ -1,3 +1,4 @@
+// src/components/admin/AdminLayout.jsx
 import {
   Dialog,
   DialogBackdrop,
@@ -7,13 +8,15 @@ import {
 import Sidebar from "../shared/Sidebar";
 import React, { useState } from "react";
 import { RxCross1 } from "react-icons/rx";
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet, useLocation, Link } from "react-router-dom";
 import {
   FaBars,
   FaBell,
   FaSearch,
   FaUser,
   FaChevronRight,
+  FaStore,
+  FaHome,
 } from "react-icons/fa";
 import { useSelector } from "react-redux";
 
@@ -98,6 +101,24 @@ function AdminLayout() {
 
               {/* Right Section */}
               <div className="flex items-center gap-x-4 lg:gap-x-6">
+                {/* Back to Store Button */}
+                <Link
+                  to="/"
+                  className="hidden lg:flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg font-semibold hover:from-blue-600 hover:to-purple-700 transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105"
+                >
+                  <FaStore className="text-lg" />
+                  <span>Back to Store</span>
+                </Link>
+
+                {/* Mobile Back Button */}
+                <Link
+                  to="/"
+                  className="lg:hidden flex items-center justify-center w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all duration-300 shadow-md"
+                  title="Back to Store"
+                >
+                  <FaHome className="text-lg" />
+                </Link>
+
                 {/* Search Button */}
                 <button className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
                   <FaSearch className="text-lg" />

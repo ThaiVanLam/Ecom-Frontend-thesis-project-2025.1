@@ -1,7 +1,13 @@
+// src/App.jsx
 import { FaBeer } from "react-icons/fa";
 import "./App.css";
 import Products from "./components/products/Products";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation,
+} from "react-router-dom";
 import Home from "./components/home/Home";
 import Navbar from "./components/shared/Navbar";
 import About from "./components/About";
@@ -24,11 +30,24 @@ import Profile from "./components/profile/Profile";
 import CustomerOrders from "./components/order/CustomerOrders";
 import PriceRangeFilter from "./components/products/PriceRangeFilter";
 
+// Component wrapper để kiểm tra route
+function ConditionalNavbar() {
+  const location = useLocation();
+  const isAdminRoute = location.pathname.startsWith("/admin");
+
+  // Không hiển thị Navbar nếu đang ở admin route
+  if (isAdminRoute) {
+    return null;
+  }
+
+  return <Navbar />;
+}
+
 function App() {
   return (
     <React.Fragment>
       <Router>
-        <Navbar />
+        <ConditionalNavbar />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/products" element={<Products />} />

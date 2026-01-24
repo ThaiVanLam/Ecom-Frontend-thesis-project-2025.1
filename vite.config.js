@@ -10,12 +10,12 @@ export default defineConfig({
   //   port: 5173,
   //   strictPort: true,
   //   allowedHosts: [
-  //     "supervision-prepaid-gate-tiny.trycloudflare.com", // Thêm domain của bạn
+  //     "https://pictures-rebate-mine-made.trycloudflare.com", // Thêm domain của bạn, Frontend tunnel URL
   //     ".trycloudflare.com", // Cho phép tất cả subdomain trycloudflare
   //   ],
   //   hmr: {
   //     protocol: "wss", // WebSocket Secure
-  //     host: "supervision-prepaid-gate-tiny.trycloudflare.com",
+  //     host: "https://pictures-rebate-mine-made.trycloudflare.com", //Frontend tunnel URL
   //     port: 443,
   //     clientPort: 443,
   //   },
