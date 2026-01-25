@@ -6,9 +6,20 @@ import {
   DialogTitle,
 } from "@headlessui/react";
 import { Divider } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Status from "./Status";
 import { MdClose, MdDone } from "react-icons/md";
+import {
+  FaBox,
+  FaCog,
+  FaMemory,
+  FaMicrochip,
+  FaSave,
+  FaTimes,
+  FaTv,
+} from "react-icons/fa";
+import api from "../../api/api";
+import Loader from "./Loader";
 
 export default function ProductViewModal({
   open,
@@ -28,13 +39,73 @@ export default function ProductViewModal({
     specialPrice,
   } = product;
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
+  const [specifications, setSpecifications] = useState(null);
+  const [loadingSpecs, setLoadingSpecs] = useState(false);
+  const [specsError, setSpecsError] = useState(null);
+
+  // Fetch specifications when modal opens
+  useEffect(() => {
+    const fetchSpecifications = async () => {
+      if (open && id) {
+        try {
+          setLoadingSpecs(true);
+          setSpecsError(null);
+          const { data } = await api.get(
+            `/product-manager/api/products/public/${id}/specifications`,
+          );
+          setSpecifications(data);
+        } catch (error) {
+          if (error.response?.status === 404) {
+            setSpecsError("No specifications available");
+          } else {
+            setSpecsError("Failed to load specifications");
+          }
+          setSpecifications(null);
+        } finally {
+          setLoadingSpecs(false);
+        }
+      }
+    };
+
+    fetchSpecifications();
+  }, [open, id]);
 
   if (isFromPanel) {
     isAvailable = quantity && Number(quantity) > 0;
   }
+
+  const specificationItems = [
+    {
+      icon: FaMicrochip,
+      label: "Processor",
+      value: specifications?.processor,
+      color: "from-blue-500 to-cyan-500",
+    },
+    {
+      icon: FaMemory,
+      label: "RAM",
+      value: specifications?.ram,
+      color: "from-purple-500 to-pink-500",
+    },
+    {
+      icon: FaSave,
+      label: "Storage",
+      value: specifications?.storage,
+      color: "from-green-500 to-emerald-500",
+    },
+    {
+      icon: FaTv,
+      label: "Display",
+      value: specifications?.display,
+      color: "from-orange-500 to-red-500",
+    },
+    {
+      icon: FaCog,
+      label: "Graphics",
+      value: specifications?.graphics,
+      color: "from-indigo-500 to-purple-500",
+    },
+  ];
 
   return (
     <>
@@ -42,69 +113,174 @@ export default function ProductViewModal({
         open={open}
         as="div"
         className="relative z-10 focus:outline-none"
-        onClose={close}
-        __demoMode
+        onClose={() => setOpen(false)}
       >
         <DialogBackdrop className="fixed inset-0 bg-gray-500/75 transition-opacity" />
         <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4">
             <DialogPanel
               transition
-              className="relative transform overflow-hidden rounded-lg bg-white shadow-xl transition-all md:max-w-[620px] md:min-w-[620px] w-full"
+              className="relative transform overflow-hidden rounded-2xl bg-white shadow-2xl transition-all w-full max-w-4xl"
             >
+              {/* Close Button */}
+              <button
+                onClick={() => setOpen(false)}
+                className="absolute top-4 right-4 z-10 p-2 bg-white rounded-full shadow-lg hover:bg-gray-100 transition-colors"
+              >
+                <FaTimes className="text-gray-600 text-xl" />
+              </button>
+
+              {/* Product Image */}
               {image && (
-                <div className="flex justify-center aspect-[3/2]">
-                  <img src={image} alt={productName} />
+                <div className="relative w-full bg-gradient-to-br from-gray-50 to-gray-100">
+                  <div className="flex justify-center items-center py-8 px-4">
+                    <img
+                      src={image}
+                      alt={productName}
+                      className="max-h-80 object-contain rounded-lg shadow-md"
+                    />
+                  </div>
                 </div>
               )}
 
-              <div className="px-6 pt-10 pb-2">
+              {/* Product Details */}
+              <div className="px-6 pt-6 pb-4">
                 <DialogTitle
                   as="h1"
-                  className="lg:text-3xl sm:text-2xl text-xl font-semibold 8 text-gray-800 mb-4 "
+                  className="text-3xl font-bold text-gray-900 mb-4"
                 >
                   {productName}
                 </DialogTitle>
 
-                <div className="space-y-2 text-gray-700 pb-4">
-                  <div className="flex items-center justify-between">
+                {/* Price and Stock */}
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center gap-4">
                     {specialPrice ? (
-                      <div className="flex gap-2 items-center">
-                        <span className="text-gray-400 line-through">
+                      <div className="flex items-center gap-3">
+                        <span className="text-gray-400 line-through text-lg">
                           ${Number(price).toFixed(2)}
                         </span>
-                        <span className="text-xl font-bold text-slate-700">
+                        <span className="text-3xl font-bold text-blue-600">
                           ${Number(specialPrice).toFixed(2)}
                         </span>
+                        {discount > 0 && (
+                          <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-semibold">
+                            Save {discount}%
+                          </span>
+                        )}
                       </div>
                     ) : (
-                      <span className="text-xl font-bold text-slate-700">
-                        {"  "}${Number(price).toFixed(2)}
+                      <span className="text-3xl font-bold text-blue-600">
+                        ${Number(price).toFixed(2)}
                       </span>
                     )}
-                    {isAvailable ? (
-                      <Status
-                        text="In Stock"
-                        icon={MdDone}
-                        bg="bg-teal-200"
-                        color="text-teal-900"
-                      />
-                    ) : (
-                      <Status
-                        text="Out-Of-Stock"
-                        icon={MdClose}
-                        bg="bg-rose-200"
-                        color="text-rose-700"
-                      />
-                    )}
                   </div>
-                  <Divider />
-                  <p>{description}</p>
+                  {isAvailable ? (
+                    <Status
+                      text="In Stock"
+                      icon={MdDone}
+                      bg="bg-green-100"
+                      color="text-green-700"
+                    />
+                  ) : (
+                    <Status
+                      text="Out of Stock"
+                      icon={MdClose}
+                      bg="bg-red-100"
+                      color="text-red-700"
+                    />
+                  )}
                 </div>
+
+                <Divider className="my-4" />
+
+                {/* Description */}
+                <div className="mb-6">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                    Description
+                  </h3>
+                  <p className="text-gray-700 leading-relaxed">{description}</p>
+                </div>
+
+                {/* Specifications Section */}
+                <div className="mb-6">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="p-2 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg">
+                      <FaCog className="text-white text-xl" />
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-900">
+                      Technical Specifications
+                    </h3>
+                  </div>
+
+                  {loadingSpecs ? (
+                    <div className="flex justify-center py-8">
+                      <Loader text="Loading specifications..." />
+                    </div>
+                  ) : specsError ? (
+                    <div className="bg-gray-50 rounded-xl p-6 text-center">
+                      <p className="text-gray-500">{specsError}</p>
+                    </div>
+                  ) : specifications ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {specificationItems.map(
+                        (spec, index) =>
+                          spec.value && (
+                            <div
+                              key={index}
+                              className="bg-gradient-to-br from-gray-50 to-white rounded-xl p-4 border border-gray-200 hover:shadow-md transition-shadow duration-300"
+                            >
+                              <div className="flex items-start gap-3">
+                                <div
+                                  className={`p-3 bg-gradient-to-br ${spec.color} rounded-lg flex-shrink-0`}
+                                >
+                                  <spec.icon className="text-white text-xl" />
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  <p className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">
+                                    {spec.label}
+                                  </p>
+                                  <p className="text-gray-900 font-medium break-words">
+                                    {spec.value}
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                          ),
+                      )}
+                    </div>
+                  ) : (
+                    <div className="bg-gray-50 rounded-xl p-6 text-center">
+                      <FaBox className="text-gray-400 text-4xl mx-auto mb-3" />
+                      <p className="text-gray-500">
+                        No specifications available for this product
+                      </p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Stock Info */}
+                {isFromPanel && (
+                  <div className="bg-blue-50 rounded-xl p-4 border border-blue-200">
+                    <div className="flex items-center gap-3">
+                      <FaBox className="text-blue-600 text-xl" />
+                      <div>
+                        <p className="text-sm font-semibold text-blue-900">
+                          Quantity Available
+                        </p>
+                        <p className="text-blue-700 font-medium">
+                          {quantity} units in stock
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
-              <div className="flex gap-4 px-6 py-4 justify-end">
+
+              {/* Footer */}
+              <div className="flex gap-4 px-6 py-4 bg-gray-50 border-t border-gray-200 justify-end">
                 <button
-                  className="px-4 py-2 text-sm font-semibold border-slate-700 border text-slate-700 hover:text-slate-800 hover:border-slate-800 rounded-md"
+                  className="px-6 py-3 text-sm font-semibold border-2 border-gray-300 text-gray-700 hover:text-gray-900 hover:border-gray-400 rounded-xl transition-all duration-300"
                   type="button"
                   onClick={() => setOpen(false)}
                 >
