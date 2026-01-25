@@ -42,6 +42,8 @@ export default function ProductViewModal({
   const [specifications, setSpecifications] = useState(null);
   const [loadingSpecs, setLoadingSpecs] = useState(false);
   const [specsError, setSpecsError] = useState(null);
+  const [showHeader, setShowHeader] = useState(true);
+  const [mouseY, setMouseY] = useState(0);
 
   // Fetch specifications when modal opens
   useEffect(() => {
@@ -69,6 +71,35 @@ export default function ProductViewModal({
 
     fetchSpecifications();
   }, [open, id]);
+
+  // Handle mouse movement to show/hide header
+  useEffect(() => {
+    if (!open) return;
+
+    const handleMouseMove = (e) => {
+      setMouseY(e.clientY);
+
+      // Show header when mouse is near top (within 100px)
+      if (e.clientY < 100) {
+        setShowHeader(true);
+      } else {
+        setShowHeader(false);
+      }
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+    };
+  }, [open]);
+
+  // Reset header visibility when modal closes
+  useEffect(() => {
+    if (!open) {
+      setShowHeader(true);
+    }
+  }, [open]);
 
   if (isFromPanel) {
     isAvailable = quantity && Number(quantity) > 0;
@@ -122,13 +153,33 @@ export default function ProductViewModal({
               transition
               className="relative transform overflow-hidden rounded-2xl bg-white shadow-2xl transition-all w-full max-w-4xl"
             >
-              {/* Close Button */}
-              <button
-                onClick={() => setOpen(false)}
-                className="absolute top-4 right-4 z-10 p-2 bg-white rounded-full shadow-lg hover:bg-gray-100 transition-colors"
+              {/* Close Button - with smooth fade animation */}
+              <div
+                className={`absolute top-0 right-0 left-0 z-20 transition-all duration-500 ease-in-out ${
+                  showHeader
+                    ? "translate-y-0 opacity-100"
+                    : "-translate-y-full opacity-0 pointer-events-none"
+                }`}
               >
-                <FaTimes className="text-gray-600 text-xl" />
-              </button>
+                <div className="absolute top-4 right-4">
+                  <button
+                    onClick={() => setOpen(false)}
+                    className="p-3 bg-white rounded-full shadow-lg hover:bg-gray-100 transition-colors transform hover:scale-110 duration-200"
+                  >
+                    <FaTimes className="text-gray-600 text-xl" />
+                  </button>
+                </div>
+
+                {/* Gradient overlay for better visibility */}
+                <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-black/30 to-transparent pointer-events-none" />
+              </div>
+
+              {/* Hover indicator when header is hidden */}
+              <div
+                className={`absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 transition-all duration-300 ${
+                  showHeader ? "opacity-0" : "opacity-100"
+                }`}
+              />
 
               {/* Product Image */}
               {image && (
