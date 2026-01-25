@@ -1,4 +1,4 @@
-import { FaEdit, FaEye, FaImage, FaTrashAlt } from "react-icons/fa";
+import { FaEdit, FaEye, FaImage, FaTrashAlt, FaCog } from "react-icons/fa";
 import { MdOutlineEmail } from "react-icons/md";
 
 export const adminProductTableColumn = (
@@ -6,13 +6,14 @@ export const adminProductTableColumn = (
   handleDelete,
   handleImageUpload,
   handleProductView,
+  handleSpecificationEdit,
 ) => [
   {
     disableColumnMenu: true,
     sortable: false,
     field: "id",
     headerName: "ID",
-    minWidth: 200,
+    minWidth: 100,
     headerAlign: "center",
     align: "center",
     editable: false,
@@ -38,7 +39,7 @@ export const adminProductTableColumn = (
     disableColumnMenu: true,
     field: "price",
     headerName: "Price",
-    minWidth: 200,
+    minWidth: 120,
     headerAlign: "center",
     align: "center",
     editable: false,
@@ -50,7 +51,7 @@ export const adminProductTableColumn = (
     disableColumnMenu: true,
     field: "quantity",
     headerName: "Quantity",
-    minWidth: 200,
+    minWidth: 120,
     headerAlign: "center",
     align: "center",
     editable: false,
@@ -62,7 +63,7 @@ export const adminProductTableColumn = (
     disableColumnMenu: true,
     field: "specialPrice",
     headerName: "Price",
-    minWidth: 200,
+    minWidth: 140,
     headerAlign: "center",
     align: "center",
     editable: false,
@@ -75,7 +76,7 @@ export const adminProductTableColumn = (
   {
     sortable: false,
     field: "description",
-    headerName: "Image",
+    headerName: "Description",
     headerAlign: "center",
     align: "center",
     width: 200,
@@ -86,19 +87,6 @@ export const adminProductTableColumn = (
     renderHeader: (params) => <span className="ps-10">Description</span>,
   },
   {
-    sortable: false,
-    field: "image",
-    headerName: "Image",
-    headerAlign: "center",
-    align: "center",
-    width: 200,
-    editable: false,
-    disableColumnMenu: true,
-    headerClassName: "text-black font-semibold border ",
-    cellClassName: "text-slate-700 font-normal border",
-    renderHeader: (params) => <span className="ps-10">Image</span>,
-  },
-  {
     field: "action",
     headerName: "Action",
     headerAlign: "center",
@@ -106,38 +94,53 @@ export const adminProductTableColumn = (
     headerClassName: "text-black font-semibold text-center",
     cellClassName: "text-slate-700 font-normal",
     sortable: false,
-    width: 400,
+    width: 500,
     renderHeader: (params) => <span>Action</span>,
     renderCell: (params) => {
       return (
         <div className="flex justify-center items-center space-x-2 h-full pt-2">
           <button
             onClick={() => handleImageUpload(params.row)}
-            className="flex items-center bg-green-500 hover:bg-green-600 text-white px-4 h-9 rounded-md"
+            className="flex items-center bg-green-500 hover:bg-green-600 text-white px-3 h-9 rounded-md"
+            title="Upload Image"
           >
-            <FaImage className="mr-2" />
+            <FaImage className="mr-1" />
             Image
           </button>
+
+          <button
+            onClick={() => handleSpecificationEdit(params.row)}
+            className="flex items-center bg-purple-500 hover:bg-purple-600 text-white px-3 h-9 rounded-md"
+            title="Edit Specifications"
+          >
+            <FaCog className="mr-1" />
+            Specs
+          </button>
+
           <button
             onClick={() => handleEdit(params.row)}
-            className="flex items-center bg-blue-500 text-white px-4 h-9 rounded-md "
+            className="flex items-center bg-blue-500 hover:bg-blue-600 text-white px-3 h-9 rounded-md"
+            title="Edit Product"
           >
-            <FaEdit className="mr-2" />
+            <FaEdit className="mr-1" />
             Edit
           </button>
 
           <button
             onClick={() => handleDelete(params.row)}
-            className="flex items-center bg-red-500 text-white px-4   h-9 rounded-md"
+            className="flex items-center bg-red-500 hover:bg-red-600 text-white px-3 h-9 rounded-md"
+            title="Delete Product"
           >
-            <FaTrashAlt className="mr-2" />
+            <FaTrashAlt className="mr-1" />
             Delete
           </button>
+
           <button
             onClick={() => handleProductView(params.row)}
-            className="flex items-center bg-slate-800 text-white px-4   h-9 rounded-md"
+            className="flex items-center bg-slate-800 hover:bg-slate-900 text-white px-3 h-9 rounded-md"
+            title="View Details"
           >
-            <FaEye className="mr-2" />
+            <FaEye className="mr-1" />
             View
           </button>
         </div>

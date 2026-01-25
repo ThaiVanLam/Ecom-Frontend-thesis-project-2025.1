@@ -15,6 +15,7 @@ import toast from "react-hot-toast";
 import ImageUploadForm from "./ImageUploadForm";
 import ProductViewModal from "../../../components/shared/ProductViewModal";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import ProductSpecificationModal from "../../../components/modal/ProductSpecificationModal";
 
 function AdminProducts() {
   // const products = [
@@ -69,7 +70,7 @@ function AdminProducts() {
   const { isLoading, errorMessage } = useSelector((state) => state.errors);
 
   const [currentPage, setCurrentPage] = useState(
-    pagination?.pageNumber + 1 || 1
+    pagination?.pageNumber + 1 || 1,
   );
 
   const dispatch = useDispatch();
@@ -85,6 +86,8 @@ function AdminProducts() {
   const [openProductViewModal, setOpenProductViewModal] = useState(false);
 
   const [openImageUploadModal, setOpenImageUploadModal] = useState(false);
+
+  const [specModalOpen, setSpecModalOpen] = useState(false);
 
   const [loader, setLoader] = useState(false);
 
@@ -110,6 +113,12 @@ function AdminProducts() {
       specialPrice: item.specialPrice,
     };
   });
+
+  // Bước 3: Tạo handler để mở modal khi click nút Specs
+  const handleSpecificationEdit = (product) => {
+    setSelectedProduct(product);
+    setSpecModalOpen(true);
+  };
 
   const handleEdit = (product) => {
     setSelectedProduct(product);
@@ -140,8 +149,8 @@ function AdminProducts() {
         selectedProduct?.id,
         toast,
         setOpenDeleteModal,
-        isAdmin
-      )
+        isAdmin,
+      ),
     );
   };
 
@@ -183,7 +192,8 @@ function AdminProducts() {
                   handleEdit,
                   handleDelete,
                   handleImageUpload,
-                  handleProductView
+                  handleProductView,
+                  handleSpecificationEdit,
                 )}
                 paginationMode="server"
                 rowCount={pagination?.totalElements || 0}
@@ -247,6 +257,14 @@ function AdminProducts() {
         setOpen={setOpenProductViewModal}
         product={selectedProduct}
         isFromPanel
+      />
+
+      {/* Modal specification */}
+      <ProductSpecificationModal
+        open={specModalOpen}
+        setOpen={setSpecModalOpen}
+        product={selectedProduct}
+        isAdmin={true} // true cho admin, false cho seller
       />
     </div>
   );
