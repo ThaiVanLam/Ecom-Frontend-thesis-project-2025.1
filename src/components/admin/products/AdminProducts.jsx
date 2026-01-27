@@ -104,7 +104,9 @@ function AdminProducts() {
   const tableRecords = products?.map((item) => {
     return {
       id: item.productId,
+      sku: item.sku,
       productName: item.productName,
+      brand: item.brand,
       description: item.description,
       discount: item.discount,
       image: item.image,

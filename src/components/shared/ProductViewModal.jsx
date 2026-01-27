@@ -203,6 +203,28 @@ export default function ProductViewModal({
                   {productName}
                 </DialogTitle>
 
+                {isFromPanel && product.sku && (
+                  <div className="inline-flex items-center gap-2 bg-blue-50 px-4 py-2 rounded-lg mb-4">
+                    <span className="text-sm font-semibold text-gray-600">
+                      SKU:
+                    </span>
+                    <span className="text-sm font-mono font-bold text-blue-600">
+                      {product.sku}
+                    </span>
+                  </div>
+                )}
+
+                {product.brand && (
+                  <div className="inline-flex items-center gap-2 bg-gray-50 px-4 py-2 rounded-lg mb-4 ml-2">
+                    <span className="text-sm font-semibold text-gray-600">
+                      Brand:
+                    </span>
+                    <span className="text-sm font-bold text-gray-900">
+                      {product.brand}
+                    </span>
+                  </div>
+                )}
+
                 {/* Price and Stock */}
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex items-center gap-4">

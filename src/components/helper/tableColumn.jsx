@@ -23,6 +23,20 @@ export const adminProductTableColumn = (
   },
   {
     disableColumnMenu: true,
+    field: "sku",
+    headerName: "SKU",
+    align: "center",
+    width: 200,
+    editable: false,
+    sortable: false,
+    headerAlign: "center",
+    headerClassName: "text-black font-semibold text-center border",
+    cellClassName:
+      "text-slate-700 font-normal border text-center font-mono text-xs",
+    renderHeader: (params) => <span>SKU</span>,
+  },
+  {
+    disableColumnMenu: true,
     field: "productName",
     headerName: "Product Name",
     align: "center",
@@ -34,7 +48,19 @@ export const adminProductTableColumn = (
     cellClassName: "text-slate-700 font-normal border text-center",
     renderHeader: (params) => <span>Product Name</span>,
   },
-
+  {
+    disableColumnMenu: true,
+    field: "brand",
+    headerName: "Brand",
+    align: "center",
+    width: 120,
+    editable: false,
+    sortable: false,
+    headerAlign: "center",
+    headerClassName: "text-black font-semibold text-center border",
+    cellClassName: "text-slate-700 font-normal border text-center",
+    renderHeader: (params) => <span>Brand</span>,
+  },
   {
     disableColumnMenu: true,
     field: "price",

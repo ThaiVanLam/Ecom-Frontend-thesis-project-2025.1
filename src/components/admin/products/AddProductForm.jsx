@@ -46,13 +46,14 @@ function AddProductForm({ setOpen, product, update = false }) {
           reset,
           setLoader,
           setOpen,
-          isAdmin
-        )
+          isAdmin,
+        ),
       );
     } else {
       const sendData = {
         ...data,
         id: product.id,
+        brand: data.brand,
       };
       dispatch(
         updateProductFromDashboard(
@@ -61,8 +62,8 @@ function AddProductForm({ setOpen, product, update = false }) {
           reset,
           setLoader,
           setOpen,
-          isAdmin
-        )
+          isAdmin,
+        ),
       );
     }
   };
@@ -70,13 +71,14 @@ function AddProductForm({ setOpen, product, update = false }) {
   useEffect(() => {
     if (update && product) {
       setValue("productName", product?.productName);
+      setValue("brand", product?.brand || "");
       setValue("price", product?.price);
       setValue("quantity", product?.quantity);
       setValue("discount", product?.discount);
       setValue("specialPrice", product?.specialPrice);
       setValue("description", product?.description);
     }
-  }, [update, product]);
+  }, [update, product, setValue]);
 
   useEffect(() => {
     if (!update) {
@@ -113,6 +115,17 @@ function AddProductForm({ setOpen, product, update = false }) {
             errors={errors}
           />
 
+          <InputField
+            label="Brand"
+            required
+            id="brand"
+            type="text"
+            message="This field is required*"
+            placeholder="e.g., Dell, HP, Lenovo"
+            register={register}
+            errors={errors}
+          />
+
           {!update && (
             <SelectTextField
               label="Select Categories"
@@ -122,6 +135,21 @@ function AddProductForm({ setOpen, product, update = false }) {
             />
           )}
         </div>
+
+        {update && product?.sku && (
+          <div className="flex flex-col gap-1 w-full">
+            <label className="font-semibold text-sm text-slate-800">
+              Current SKU
+            </label>
+            <div className="px-2 py-2 border border-slate-300 bg-gray-50 rounded-md text-slate-600 font-mono text-sm">
+              {product.sku}
+            </div>
+            <p className="text-xs text-gray-500 mt-1">
+              ℹ️ SKU will be automatically regenerated if you change Product
+              Name or Brand
+            </p>
+          </div>
+        )}
 
         <div className="flex md:flex-row flex-col gap-4 w-full">
           <InputField
