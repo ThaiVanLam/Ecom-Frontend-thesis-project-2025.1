@@ -36,8 +36,7 @@ function CustomerOrders() {
       0,
     );
     const pendingOrders = customerOrder.filter(
-      (order) =>
-        order.orderStatus === "Pending" || order.orderStatus === "Processing",
+      (order) => order.orderStatus === "Pending",
     ).length;
     const completedOrders = customerOrder.filter(
       (order) => order.orderStatus === "Delivered",
