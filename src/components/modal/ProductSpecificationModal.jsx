@@ -1,15 +1,39 @@
 import React, { useState, useEffect } from "react";
 import { Dialog, DialogBackdrop, DialogPanel } from "@headlessui/react";
-import { FaTimes, FaSave, FaCog } from "react-icons/fa";
+import { FaTimes, FaSave, FaCog, FaChevronDown } from "react-icons/fa";
 import InputField from "../shared/InputField";
 import { useForm } from "react-hook-form";
 import Spinners from "../shared/Spinners";
 import api from "../../api/api";
 import toast from "react-hot-toast";
 
+// Danh sách options giống như trong advance filter
+const PROCESSOR_OPTIONS = [
+  "Intel Core i3",
+  "Intel Core i5",
+  "Intel Core i7",
+  "Intel Core i9",
+  "AMD Ryzen 3",
+  "AMD Ryzen 5",
+  "AMD Ryzen 7",
+  "AMD Ryzen 9",
+  "Apple M1",
+  "Apple M2",
+  "Apple M3",
+];
+
+const RAM_OPTIONS = ["4GB", "8GB", "16GB", "32GB", "64GB"];
+
+const STORAGE_OPTIONS = ["128GB", "256GB", "512GB", "1TB", "2TB"];
+
 function ProductSpecificationModal({ open, setOpen, product, isAdmin }) {
   const [loader, setLoader] = useState(false);
   const [hasExistingSpec, setHasExistingSpec] = useState(false);
+
+  // State cho các select box
+  const [selectedProcessor, setSelectedProcessor] = useState("");
+  const [selectedRAM, setSelectedRAM] = useState("");
+  const [selectedStorage, setSelectedStorage] = useState("");
 
   const {
     register,
@@ -29,9 +53,9 @@ function ProductSpecificationModal({ open, setOpen, product, isAdmin }) {
           );
 
           // Set form values with existing data
-          setValue("processor", data.processor || "");
-          setValue("ram", data.ram || "");
-          setValue("storage", data.storage || "");
+          setSelectedProcessor(data.processor || "");
+          setSelectedRAM(data.ram || "");
+          setSelectedStorage(data.storage || "");
           setValue("display", data.display || "");
           setValue("graphics", data.graphics || "");
           setHasExistingSpec(true);
@@ -40,6 +64,9 @@ function ProductSpecificationModal({ open, setOpen, product, isAdmin }) {
           setHasExistingSpec(false);
           // Clear form
           reset();
+          setSelectedProcessor("");
+          setSelectedRAM("");
+          setSelectedStorage("");
         }
       }
     };
@@ -52,9 +79,17 @@ function ProductSpecificationModal({ open, setOpen, product, isAdmin }) {
       setLoader(true);
       const endpoint = isAdmin ? "admin" : "seller";
 
+      const requestData = {
+        processor: selectedProcessor,
+        ram: selectedRAM,
+        storage: selectedStorage,
+        display: data.display,
+        graphics: data.graphics,
+      };
+
       await api.post(
         `/product-manager/api/products/${endpoint}/${product.id}/specifications`,
-        data,
+        requestData,
       );
 
       toast.success(
@@ -115,37 +150,73 @@ function ProductSpecificationModal({ open, setOpen, product, isAdmin }) {
             {/* Form */}
             <form onSubmit={handleSubmit(onSubmitHandler)} className="p-6">
               <div className="space-y-4">
-                {/* Processor */}
-                <InputField
-                  label="Processor (CPU)"
-                  id="processor"
-                  type="text"
-                  placeholder="e.g., Intel Core i7-13700H (up to 5.0GHz)"
-                  register={register}
-                  errors={errors}
-                />
+                {/* Processor Select */}
+                <div className="flex flex-col gap-2 w-full">
+                  <label className="font-semibold text-sm text-slate-800">
+                    Processor (CPU)
+                  </label>
+                  <div className="relative">
+                    <select
+                      value={selectedProcessor}
+                      onChange={(e) => setSelectedProcessor(e.target.value)}
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 hover:border-gray-300 appearance-none cursor-pointer bg-white"
+                    >
+                      <option value="">Select Processor</option>
+                      {PROCESSOR_OPTIONS.map((processor) => (
+                        <option key={processor} value={processor}>
+                          {processor}
+                        </option>
+                      ))}
+                    </select>
+                    <FaChevronDown className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
+                  </div>
+                </div>
 
-                {/* RAM */}
-                <InputField
-                  label="RAM"
-                  id="ram"
-                  type="text"
-                  placeholder="e.g., 16GB DDR5 4800MHz"
-                  register={register}
-                  errors={errors}
-                />
+                {/* RAM Select */}
+                <div className="flex flex-col gap-2 w-full">
+                  <label className="font-semibold text-sm text-slate-800">
+                    RAM
+                  </label>
+                  <div className="relative">
+                    <select
+                      value={selectedRAM}
+                      onChange={(e) => setSelectedRAM(e.target.value)}
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 hover:border-gray-300 appearance-none cursor-pointer bg-white"
+                    >
+                      <option value="">Select RAM</option>
+                      {RAM_OPTIONS.map((ram) => (
+                        <option key={ram} value={ram}>
+                          {ram}
+                        </option>
+                      ))}
+                    </select>
+                    <FaChevronDown className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
+                  </div>
+                </div>
 
-                {/* Storage */}
-                <InputField
-                  label="Storage"
-                  id="storage"
-                  type="text"
-                  placeholder="e.g., 512GB SSD NVMe PCIe Gen 4"
-                  register={register}
-                  errors={errors}
-                />
+                {/* Storage Select */}
+                <div className="flex flex-col gap-2 w-full">
+                  <label className="font-semibold text-sm text-slate-800">
+                    Storage
+                  </label>
+                  <div className="relative">
+                    <select
+                      value={selectedStorage}
+                      onChange={(e) => setSelectedStorage(e.target.value)}
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 hover:border-gray-300 appearance-none cursor-pointer bg-white"
+                    >
+                      <option value="">Select Storage</option>
+                      {STORAGE_OPTIONS.map((storage) => (
+                        <option key={storage} value={storage}>
+                          {storage}
+                        </option>
+                      ))}
+                    </select>
+                    <FaChevronDown className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
+                  </div>
+                </div>
 
-                {/* Display */}
+                {/* Display - Text Input */}
                 <InputField
                   label="Display"
                   id="display"
@@ -155,7 +226,7 @@ function ProductSpecificationModal({ open, setOpen, product, isAdmin }) {
                   errors={errors}
                 />
 
-                {/* Graphics */}
+                {/* Graphics - Text Input */}
                 <InputField
                   label="Graphics Card (GPU)"
                   id="graphics"
