@@ -10,17 +10,9 @@ import { useEffect, useState } from "react";
 import { FiArrowDown, FiArrowUp, FiRefreshCw, FiSearch } from "react-icons/fi";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import PriceRangeFilter from "./PriceRangeFilter";
+import AdvancedFilters from "./AdvancedFilters";
 
-const Filter = ({ categories }) => {
-  // const categories = [
-  //   { categoryId: 1, categoryName: "Gaming Laptops" },
-  //   { categoryId: 1, categoryName: "Business Laptops" },
-  //   { categoryId: 1, categoryName: "Student Laptops" },
-  //   { categoryId: 1, categoryName: "Ultrabook" },
-  //   { categoryId: 1, categoryName: "Workstation" },
-  //   { categoryId: 1, categoryName: "Graphics Laptops" },
-  // ];
-
+const Filter = ({ categories, brands = [] }) => {
   const [searchParams] = useSearchParams();
   const params = new URLSearchParams(searchParams);
   const pathname = useLocation().pathname;
@@ -34,6 +26,12 @@ const Filter = ({ categories }) => {
   const [minPrice, setMinPrice] = useState(null);
   const [maxPrice, setMaxPrice] = useState(null);
 
+  // for advanced filters
+  const [selectedBrands, setSelectedBrands] = useState([]);
+  const [selectedProcessors, setSelectedProcessors] = useState([]);
+  const [selectedRAM, setSelectedRAM] = useState([]);
+  const [selectedStorage, setSelectedStorage] = useState([]);
+
   useEffect(() => {
     const currentCategory = searchParams.get("category") || "all";
     const currentSortOrder = searchParams.get("sortby") || "asc";
@@ -43,6 +41,16 @@ const Filter = ({ categories }) => {
     const currentMinPrice = searchParams.get("minPrice");
     const currentMaxPrice = searchParams.get("maxPrice");
 
+    // for advanced filters
+    const currentBrands =
+      searchParams.get("brands")?.split(",").filter(Boolean) || [];
+    const currentProcessors =
+      searchParams.get("processors")?.split(",").filter(Boolean) || [];
+    const currentRAM =
+      searchParams.get("ram")?.split(",").filter(Boolean) || [];
+    const currentStorage =
+      searchParams.get("storage")?.split(",").filter(Boolean) || [];
+
     setCategory(currentCategory);
     setSortOrder(currentSortOrder);
     setSearchTerm(currentSearchTerm);
@@ -50,6 +58,12 @@ const Filter = ({ categories }) => {
     // for range
     setMinPrice(currentMinPrice ? Number(currentMinPrice) : null);
     setMaxPrice(currentMaxPrice ? Number(currentMaxPrice) : null);
+
+    // for advanced filters
+    setSelectedBrands(currentBrands);
+    setSelectedProcessors(currentProcessors);
+    setSelectedRAM(currentRAM);
+    setSelectedStorage(currentStorage);
   }, [searchParams]);
 
   useEffect(() => {
@@ -64,7 +78,7 @@ const Filter = ({ categories }) => {
     return () => {
       clearTimeout(handler);
     };
-  }, [searchParams, searchTerm, navigate, pathname]);
+  }, [searchTerm]);
 
   const handleCategoryChange = (event) => {
     const selectedCategory = event.target.value;
@@ -108,6 +122,39 @@ const Filter = ({ categories }) => {
     navigate(`${pathname}?${params}`);
   };
 
+  // Handle advanced filters
+  const handleAdvancedFiltersChange = (filters) => {
+    // Update brands
+    if (filters.brands.length > 0) {
+      params.set("brands", filters.brands.join(","));
+    } else {
+      params.delete("brands");
+    }
+
+    // Update processors
+    if (filters.processors.length > 0) {
+      params.set("processors", filters.processors.join(","));
+    } else {
+      params.delete("processors");
+    }
+
+    // Update RAM
+    if (filters.ram.length > 0) {
+      params.set("ram", filters.ram.join(","));
+    } else {
+      params.delete("ram");
+    }
+
+    // Update storage
+    if (filters.storage.length > 0) {
+      params.set("storage", filters.storage.join(","));
+    } else {
+      params.delete("storage");
+    }
+
+    navigate(`${pathname}?${params}`);
+  };
+
   const handleClearFilters = () => {
     params.delete("sortby");
     params.delete("category");
@@ -116,11 +163,24 @@ const Filter = ({ categories }) => {
     // for range
     params.delete("minPrice");
     params.delete("maxPrice");
+
+    // for advanced filters
+    params.delete("brands");
+    params.delete("processors");
+    params.delete("ram");
+    params.delete("storage");
+
     navigate(`${pathname}?${params}`);
 
     // for range
     setMinPrice(null);
     setMaxPrice(null);
+
+    // for advanced filters
+    setSelectedBrands([]);
+    setSelectedProcessors([]);
+    setSelectedRAM([]);
+    setSelectedStorage([]);
   };
 
   return (
@@ -194,6 +254,16 @@ const Filter = ({ categories }) => {
         onPriceChange={handlePriceChange}
         minPrice={minPrice}
         maxPrice={maxPrice}
+      />
+
+      {/* Advanced Filters */}
+      <AdvancedFilters
+        onFiltersChange={handleAdvancedFiltersChange}
+        brands={brands}
+        initialBrands={selectedBrands}
+        initialProcessors={selectedProcessors}
+        initialRAM={selectedRAM}
+        initialStorage={selectedStorage}
       />
     </div>
   );

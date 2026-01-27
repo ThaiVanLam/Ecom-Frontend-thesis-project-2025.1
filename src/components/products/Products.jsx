@@ -9,7 +9,11 @@ import {
   FaCheckCircle,
 } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchCategories, fetchProducts } from "../../store/action";
+import {
+  fetchCategories,
+  fetchProducts,
+  fetchBrands,
+} from "../../store/action";
 import Filter from "./Filter";
 
 import Loader from "../shared/Loader";
@@ -19,7 +23,7 @@ import { useProductFilter } from "../../hooks/useProductFilter";
 function Products() {
   const { isLoading, errorMessage } = useSelector((state) => state.errors);
 
-  const { products, categories, pagination } = useSelector(
+  const { products, categories, brands, pagination } = useSelector(
     (state) => state.products,
   );
   const dispatch = useDispatch();
@@ -28,6 +32,7 @@ function Products() {
 
   useEffect(() => {
     dispatch(fetchCategories());
+    dispatch(fetchBrands());
   }, [dispatch]);
 
   const emptyProducts = !products || products.length === 0;
@@ -71,7 +76,10 @@ function Products() {
                 Filter & Search
               </h3>
             </div>
-            <Filter categories={categories ? categories : []} />
+            <Filter
+              categories={categories ? categories : []}
+              brands={brands ? brands : []}
+            />
           </div>
         </div>
 

@@ -49,6 +49,20 @@ export const fetchCategories = () => async (dispatch) => {
   }
 };
 
+export const fetchBrands = () => async (dispatch) => {
+  try {
+    const { data } = await api.get(
+      `/product-manager/api/public/products/brands`,
+    );
+    dispatch({
+      type: "FETCH_BRANDS",
+      payload: data,
+    });
+  } catch (error) {
+    console.error("Failed to fetch brands:", error);
+  }
+};
+
 export const addToCart =
   (data, qty = 1, toast) =>
   (dispatch, getState) => {
