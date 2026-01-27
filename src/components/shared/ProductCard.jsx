@@ -15,6 +15,8 @@ function ProductCard({
   price,
   discount,
   specialPrice,
+  sku,
+  brand,
   about = false,
 }) {
   const [openProductViewModal, setOpenProductViewModal] = useState(false);
@@ -47,6 +49,8 @@ function ProductCard({
             price,
             discount,
             specialPrice,
+            sku,
+            brand,
           });
         }}
         className="w-full overflow-hidden aspect-[3/2]"
@@ -69,6 +73,8 @@ function ProductCard({
               price,
               discount,
               specialPrice,
+              sku,
+              brand,
             });
           }}
           className="text-lg font-semibold mb-2 cursor-pointer"
