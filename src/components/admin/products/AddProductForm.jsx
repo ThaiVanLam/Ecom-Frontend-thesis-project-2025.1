@@ -11,12 +11,16 @@ import {
 import toast from "react-hot-toast";
 import Spinners from "../../../components/shared/Spinners";
 import SelectTextField from "../../../components/shared/SelectTextField";
+import SelectBrandField from "../../../components/shared/SelectBrandField";
 import Skeleton from "../../../components/shared/Skeleton";
 import ErrorPage from "../../../components/shared/ErrorPage";
 
 function AddProductForm({ setOpen, product, update = false }) {
   const [loader, setLoader] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState();
+  const [selectedBrand, setSelectedBrand] = useState("");
+  const [brandError, setBrandError] = useState("");
+
   const { categories } = useSelector((state) => state.products);
   const { categoryLoader, errorMessage } = useSelector((state) => state.errors);
 
@@ -34,9 +38,16 @@ function AddProductForm({ setOpen, product, update = false }) {
   } = useForm({ mode: "onTouched" });
 
   const saveProductHandler = (data) => {
+    // Validate brand selection
+    if (!selectedBrand) {
+      setBrandError("Brand is required");
+      return;
+    }
+
     if (!update) {
       const sendData = {
         ...data,
+        brand: selectedBrand,
         categoryId: selectedCategory.categoryId,
       };
       dispatch(
@@ -53,7 +64,7 @@ function AddProductForm({ setOpen, product, update = false }) {
       const sendData = {
         ...data,
         id: product.id,
-        brand: data.brand,
+        brand: selectedBrand,
       };
       dispatch(
         updateProductFromDashboard(
@@ -71,7 +82,7 @@ function AddProductForm({ setOpen, product, update = false }) {
   useEffect(() => {
     if (update && product) {
       setValue("productName", product?.productName);
-      setValue("brand", product?.brand || "");
+      setSelectedBrand(product?.brand || "");
       setValue("price", product?.price);
       setValue("quantity", product?.quantity);
       setValue("discount", product?.discount);
@@ -93,11 +104,11 @@ function AddProductForm({ setOpen, product, update = false }) {
   }, [categories, categoryLoader]);
 
   if (categoryLoader) {
-    <Skeleton />;
+    return <Skeleton />;
   }
 
   if (errorMessage) {
-    <ErrorPage message={errorMessage} />;
+    return <ErrorPage message={errorMessage} />;
   }
 
   return (
@@ -115,15 +126,14 @@ function AddProductForm({ setOpen, product, update = false }) {
             errors={errors}
           />
 
-          <InputField
+          <SelectBrandField
             label="Brand"
-            required
-            id="brand"
-            type="text"
-            message="This field is required*"
-            placeholder="e.g., Dell, HP, Lenovo"
-            register={register}
-            errors={errors}
+            value={selectedBrand}
+            onChange={(brand) => {
+              setSelectedBrand(brand);
+              setBrandError("");
+            }}
+            error={brandError}
           />
 
           {!update && (
