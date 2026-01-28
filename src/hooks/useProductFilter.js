@@ -24,7 +24,12 @@ export const useProductFilter = () => {
     const minPrice = searchParams.get("minPrice") || null;
     const maxPrice = searchParams.get("maxPrice") || null;
 
-    params.set("sortBy", "price");
+    const brands = searchParams.get("brands") || null;
+    const processors = searchParams.get("processors") || null;
+    const ram = searchParams.get("ram") || null;
+    const storage = searchParams.get("storage") || null;
+
+    params.set("sortBy", "specialPrice");
     params.set("sortOrder", sortOrder);
 
     if (categoryParams) {
@@ -42,6 +47,22 @@ export const useProductFilter = () => {
 
     if (maxPrice) {
       params.set("maxPrice", maxPrice);
+    }
+
+    if (brands) {
+      params.set("brands", brands);
+    }
+
+    if (processors) {
+      params.set("processors", processors);
+    }
+
+    if (ram) {
+      params.set("ram", ram);
+    }
+
+    if (storage) {
+      params.set("storage", storage);
     }
 
     const queryString = params.toString();
