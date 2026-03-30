@@ -216,6 +216,8 @@ function Dashboard() {
           title="Total Products"
           amount={productCount}
           Icon={FaBoxOpen}
+          trend={5.2}
+          trendUp={false}
           bgGradient="from-purple-500 to-pink-600"
         />
         <DashboardOverview
