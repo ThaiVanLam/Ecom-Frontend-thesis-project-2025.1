@@ -6,7 +6,11 @@ import { Provider } from "react-redux";
 import store from "./store/reducers/store.js";
 
 createRoot(document.getElementById("root")).render(
-  <Provider store={store}>
-    <App />
-  </Provider>
+  <StrictMode>
+    <Provider store={store}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </Provider>
+  </StrictMode>,
 );
