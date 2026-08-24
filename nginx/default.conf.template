@@ -1,0 +1,62 @@
+# Rendered to /etc/nginx/conf.d/default.conf at container start.
+# ${API_GATEWAY_URL} and ${NGINX_RESOLVER} come from the environment.
+
+server {
+    listen      80;
+    server_name _;
+
+    root  /usr/share/nginx/html;
+    index index.html;
+
+    # Product image uploads go through this proxy.
+    client_max_body_size 25m;
+
+    gzip            on;
+    gzip_min_length 1024;
+    gzip_types      text/plain text/css application/javascript application/json image/svg+xml;
+
+    # Docker's embedded DNS, so a restarted api-gateway is re-resolved
+    # instead of nginx caching its old container IP for good.
+    resolver ${NGINX_RESOLVER} valid=10s ipv6=off;
+
+    # Container health probe.
+    location = /healthz {
+        access_log off;
+        add_header Content-Type text/plain;
+        return 200 "ok";
+    }
+
+    # Everything the SPA asks of the backend lives under these three prefixes
+    # (see the API Gateway route table). Proxying them keeps the browser on a
+    # single origin: no CORS preflight, and the JWT cookie is first-party.
+    location ~ ^/(user-manager|product-manager|order-manager)/ {
+        set $upstream "${API_GATEWAY_URL}";
+        # proxy_pass with a variable drops the URI, so re-append it.
+        proxy_pass $upstream$request_uri;
+
+        proxy_http_version 1.1;
+        proxy_set_header Host              $host;
+        proxy_set_header X-Real-IP         $remote_addr;
+        proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header Upgrade           $http_upgrade;
+        proxy_set_header Connection        "";
+
+        proxy_connect_timeout 10s;
+        proxy_read_timeout    120s;
+        proxy_send_timeout    120s;
+    }
+
+    # Fingerprinted Vite assets never change under the same name.
+    location /assets/ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+        try_files $uri =404;
+    }
+
+    # Client-side routing: unknown paths are React Router routes.
+    location / {
+        add_header Cache-Control "no-cache";
+        try_files $uri $uri/ /index.html;
+    }
+}
