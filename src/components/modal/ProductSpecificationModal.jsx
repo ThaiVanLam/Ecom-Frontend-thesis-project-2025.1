@@ -30,6 +30,9 @@ function ProductSpecificationModal({ open, setOpen, product, isAdmin }) {
   const [loader, setLoader] = useState(false);
   const [hasExistingSpec, setHasExistingSpec] = useState(false);
 
+  // Dashboard rows expose the id as `id`, the catalogue DTO as `productId`
+  const productId = product?.productId ?? product?.id;
+
   // State cho các select box
   const [selectedProcessor, setSelectedProcessor] = useState("");
   const [selectedRAM, setSelectedRAM] = useState("");
@@ -46,10 +49,10 @@ function ProductSpecificationModal({ open, setOpen, product, isAdmin }) {
   // Fetch existing specification when modal opens
   useEffect(() => {
     const fetchSpecification = async () => {
-      if (open && product?.productId) {
+      if (open && productId) {
         try {
           const { data } = await api.get(
-            `/product-manager/api/products/public/${product.productId}/specifications`,
+            `/product-manager/api/public/products/${productId}/specifications`,
           );
 
           // Set form values with existing data
@@ -72,7 +75,7 @@ function ProductSpecificationModal({ open, setOpen, product, isAdmin }) {
     };
 
     fetchSpecification();
-  }, [open, product, setValue, reset]);
+  }, [open, productId, setValue, reset]);
 
   const onSubmitHandler = async (data) => {
     try {
@@ -88,7 +91,7 @@ function ProductSpecificationModal({ open, setOpen, product, isAdmin }) {
       };
 
       await api.post(
-        `/product-manager/api/products/${endpoint}/${product.id}/specifications`,
+        `/product-manager/api/${endpoint}/products/${productId}/specifications`,
         requestData,
       );
 

@@ -53,7 +53,7 @@ export default function ProductViewModal({
           setLoadingSpecs(true);
           setSpecsError(null);
           const { data } = await api.get(
-            `/product-manager/api/products/public/${id}/specifications`,
+            `/product-manager/api/public/products/${id}/specifications`,
           );
           setSpecifications(data);
         } catch (error) {
