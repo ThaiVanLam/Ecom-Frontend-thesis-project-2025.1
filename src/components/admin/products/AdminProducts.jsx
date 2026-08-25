@@ -266,7 +266,7 @@ function AdminProducts() {
         open={specModalOpen}
         setOpen={setSpecModalOpen}
         product={selectedProduct}
-        isAdmin={true} // true cho admin, false cho seller
+        isAdmin={isAdmin}
       />
     </div>
   );
