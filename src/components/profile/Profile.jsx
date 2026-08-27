@@ -10,11 +10,13 @@ import {
   FaPlus,
   FaShieldAlt,
   FaCog,
+  FaKey,
 } from "react-icons/fa";
 import { HiMiniShoppingCart } from "react-icons/hi2";
 import AddressInfoModal from "../checkout/AddressInfoModal";
 import AddAddressForm from "../checkout/AddAddressForm";
 import { DeleteModal } from "../checkout/DeleteModal";
+import ChangePasswordModal from "./ChangePasswordModal";
 import toast from "react-hot-toast";
 import { deleteUserAddress } from "../../store/action";
 import Skeleton from "../shared/Skeleton";
@@ -29,6 +31,7 @@ function Profile() {
   const [openAddressModal, setOpenAddressModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [selectedAddress, setSelectedAddress] = useState("");
+  const [openPasswordModal, setOpenPasswordModal] = useState(false);
 
   // Xác định vai trò
   const isAdmin = user && user?.roles?.includes("ROLE_ADMIN");
@@ -188,6 +191,25 @@ function Profile() {
                     </div>
                   </div>
                 )}
+
+                {/* Security - available to every role */}
+                <div className="pt-4 border-t border-gray-200">
+                  <h3 className="text-sm font-semibold text-gray-700 mb-3">
+                    Security
+                  </h3>
+                  <button
+                    onClick={() => setOpenPasswordModal(true)}
+                    className="flex items-center justify-between w-full p-3 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition-colors duration-200 cursor-pointer"
+                  >
+                    <div className="flex items-center gap-3">
+                      <FaKey className="text-xl text-indigo-600" />
+                      <span className="text-gray-700 font-medium">
+                        Change Password
+                      </span>
+                    </div>
+                    <span className="text-indigo-600">→</span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -295,6 +317,12 @@ function Profile() {
           />
         </>
       )}
+
+      {/* Change Password - available to every role */}
+      <ChangePasswordModal
+        open={openPasswordModal}
+        setOpen={setOpenPasswordModal}
+      />
     </div>
   );
 }
