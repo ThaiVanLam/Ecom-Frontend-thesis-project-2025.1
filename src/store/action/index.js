@@ -165,6 +165,44 @@ export const registerNewUser =
     }
   };
 
+export const verifyCurrentPassword =
+  (currentPassword, toast, onVerified, setVerifying) => async () => {
+    try {
+      setVerifying(true);
+      await api.post("/user-manager/api/users/password/verify", {
+        currentPassword,
+      });
+      toast.success("Password verified");
+      onVerified(true);
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.message || "Incorrect current password",
+      );
+      onVerified(false);
+    } finally {
+      setVerifying(false);
+    }
+  };
+
+export const changeUserPassword =
+  (sendData, toast, onSuccess, setLoader) => async () => {
+    try {
+      setLoader(true);
+      const { data } = await api.put(
+        "/user-manager/api/users/password",
+        sendData,
+      );
+      toast.success(data?.message || "Password changed successfully");
+      onSuccess();
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.message || "Failed to change password",
+      );
+    } finally {
+      setLoader(false);
+    }
+  };
+
 export const logoutUser = (navigate) => (dispatch) => {
   dispatch({ type: "LOG_OUT" });
   localStorage.removeItem("auth");
